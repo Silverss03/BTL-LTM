@@ -107,7 +107,72 @@ public class UserController {
         }
         return false;
     }
+    public String getRank() {
+        StringBuilder rankList = new StringBuilder("RANK;");
+        String query = "SELECT username, score, win, draw, lose FROM users ORDER BY score DESC"; 
 
+        try {
+            PreparedStatement p = con.prepareStatement(query);
+            ResultSet r = p.executeQuery();
+
+            while (r.next()) {
+                String username = r.getString("username");
+                float score = r.getFloat("score");
+                int win = r.getInt("win");
+                int draw = r.getInt("draw");
+                int lose = r.getInt("lose");
+
+                // Append thông tin từng người chơi vào rankList
+                rankList.append(username).append(":")
+                        .append(score).append(":")
+                        .append(win).append(":")
+                        .append(draw).append(":")
+                        .append(lose).append(";");
+            }
+
+            r.close();
+            p.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "failed;" + e.getMessage();
+        }
+
+        return rankList.toString();
+    }
+
+    public String getRankWin() {
+        StringBuilder rankList = new StringBuilder("RANKWIN;");
+        String query = "SELECT username, score, win, draw, lose FROM users ORDER BY win DESC"; 
+
+        try {
+            PreparedStatement p = con.prepareStatement(query);
+            ResultSet r = p.executeQuery();
+
+            while (r.next()) {
+                String username = r.getString("username");
+                float score = r.getFloat("score");
+                int win = r.getInt("win");
+                int draw = r.getInt("draw");
+                int lose = r.getInt("lose");
+
+                // Append thông tin từng người chơi vào rankList
+                rankList.append(username).append(":")
+                        .append(score).append(":")
+                        .append(win).append(":")
+                        .append(draw).append(":")
+                        .append(lose).append(";");
+            }
+
+            r.close();
+            p.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return "failed;" + e.getMessage();
+        }
+
+        return rankList.toString();
+    }
+    
     public UserModel getUser(String username) {
         UserModel user = new UserModel();
         try {
@@ -128,4 +193,6 @@ public class UserController {
         }
         return null;
     }
+
+    
 }

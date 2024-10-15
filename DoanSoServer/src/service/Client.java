@@ -55,7 +55,31 @@ public class Client implements Runnable {
                         break;
                     case "REGISTER":
                         onReceiveRegister(received);
-                        break;                    
+                        break;  
+                    case "RANK":
+                        onReceiveRank();
+                        break;
+                    case "RANKWIN":
+                        onReceiveRankWin();
+                        break;   
+                    case "GET_INFO_USER":
+                        onReceiveGetInfoUser(received);
+                        break;
+                    case "INVITE_TO_CHAT":
+                        onReceiveInviteToChat(received);
+                        break;
+                    case "ACCEPT_MESSAGE":
+                        onReceiveAcceptMessage(received);
+                        break;
+                    case "NOT_ACCEPT_MESSAGE":
+                        onReceiveNotAcceptMessage(received);
+                        break;
+                    case "LEAVE_TO_CHAT":
+                        onReceiveLeaveChat(received);
+                        break;
+                    case "CHAT_MESSAGE":
+                        onReceiveChatMessage(received);
+                        break;
                 }
 
             } catch (IOException ex) {
@@ -121,9 +145,86 @@ public class Client implements Runnable {
         // send result
         sendData("REGISTER" + ";" + result);
     }
+    private void onReceiveGetInfoUser(String received) {
+        String[] splitted = received.split(";");
+        String username = splitted[1];
+        // get info user
+        String result = new UserController().getInfoUser(username);
+        
+        String status = "";
+        Client c = ServerRun.clientManager.find(username);
+        if (c == null) {
+            status = "Offline";
+        } 
+//        else {
+//            if (c.getJoinedRoom() == null) {
+//                status = "Online";
+//            } else {
+//                status = "In Game";
+//            }
+//        }
+                
+        // send result
+        sendData("GET_INFO_USER" + ";" + result + ";" + status);
+    }
+     private void onReceiveInviteToChat(String received) {
+        String[] splitted = received.split(";");
+        String userHost = splitted[1];
+        String userInvited = splitted[2];
+        
+        // send result
+        String msg = "INVITE_TO_CHAT;" + "success;" + userHost + ";" + userInvited;
+        ServerRun.clientManager.sendToAClient(userInvited, msg);
+    }
     
+    private void onReceiveAcceptMessage(String received) {
+        String[] splitted = received.split(";");
+        String userHost = splitted[1];
+        String userInvited = splitted[2];
+        
+        // send result
+        String msg = "ACCEPT_MESSAGE;" + "success;" + userHost + ";" + userInvited;
+        ServerRun.clientManager.sendToAClient(userHost, msg);
+    } 
+    private void onReceiveNotAcceptMessage(String received) {
+        String[] splitted = received.split(";");
+        String userHost = splitted[1];
+        String userInvited = splitted[2];
+        
+        // send result
+        String msg = "NOT_ACCEPT_MESSAGE;" + "success;" + userHost + ";" + userInvited;
+        ServerRun.clientManager.sendToAClient(userHost, msg);
+    }      
     
-         
+    private void onReceiveLeaveChat(String received) {
+        String[] splitted = received.split(";");
+        String userHost = splitted[1];
+        String userInvited = splitted[2];
+        
+        // send result
+        String msg = "LEAVE_TO_CHAT;" + "success;" + userHost + ";" + userInvited;
+        ServerRun.clientManager.sendToAClient(userInvited, msg);
+    }      
+    
+    private void onReceiveChatMessage(String received) {
+        String[] splitted = received.split(";");
+        String userHost = splitted[1];
+        String userInvited = splitted[2];
+        String message = splitted[3];
+        
+        // send result
+        String msg = "CHAT_MESSAGE;" + "success;" + userHost + ";" + userInvited + ";" + message;
+        ServerRun.clientManager.sendToAClient(userInvited, msg);
+    }    
+    
+       private void onReceiveRank() {
+         String result = new UserController().getRank();
+         sendData(result);
+    }
+    private void onReceiveRankWin() {
+         String result = new UserController().getRankWin();
+         sendData(result);
+    }
     // Get set
     public String getLoginUser() {
         return loginUser;

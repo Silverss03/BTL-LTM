@@ -3,7 +3,11 @@ package run;
 import controller.SocketHandler;
 import view.ConnectServer;
 import view.HomeView;
+import view.InfoPlayerView;
 import view.LoginView;
+import view.MessageView;
+import view.RankView;
+import view.RankWinView;
 import view.RegisterView;
 
 public class ClientRun {
@@ -14,6 +18,8 @@ public class ClientRun {
         HOMEVIEW,
         INFOPLAYER,
         MESSAGEVIEW,
+        RANKVIEW,
+        RANKWINVIEW,
         GAMEVIEW
     }
 
@@ -22,6 +28,11 @@ public class ClientRun {
     public static LoginView loginView;
     public static RegisterView registerView;
     public static HomeView homeView;
+    public static RankView rankView;
+    public static RankWinView rankWinView;
+    public static InfoPlayerView infoPlayerView;
+     public static MessageView messageView;
+
 
     // controller 
     public static SocketHandler socketHandler;
@@ -55,6 +66,21 @@ public class ClientRun {
                     homeView = new HomeView();
                     homeView.setVisible(true);
                     break;
+                case RANKVIEW:
+                    rankView = new RankView();
+                    rankView.setVisible(true);
+                    break;
+                case RANKWINVIEW:
+                    rankWinView = new RankWinView();
+                    rankWinView.setVisible(true);
+                    break;
+                 case INFOPLAYER:
+                    infoPlayerView = new InfoPlayerView();
+                    infoPlayerView.setVisible(true);
+                     case MESSAGEVIEW:
+                    messageView = new MessageView();
+                    messageView.setVisible(true);
+                    break;
                 default:
                     break;
             }
@@ -76,7 +102,18 @@ public class ClientRun {
                 case HOMEVIEW:
                     homeView.dispose();
                     break;
-
+                case RANKVIEW:
+                    if (rankView != null) rankView.dispose();
+                    break;
+                case RANKWINVIEW:
+                    if (rankWinView != null) rankWinView.dispose();
+                    break;
+                 case INFOPLAYER:
+                    infoPlayerView.dispose();
+                    break;
+                case MESSAGEVIEW:
+                    messageView.dispose();
+                    break;
                 default:
                     break;
             }
@@ -88,6 +125,8 @@ public class ClientRun {
         loginView.dispose();
         registerView.dispose();
         homeView.dispose();
+        infoPlayerView.dispose();
+        messageView.dispose();
     }
 
     public static void main(String[] args) {

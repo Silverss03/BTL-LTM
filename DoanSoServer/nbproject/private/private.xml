@@ -3,12 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/van%20thao/Documents/NetBeansProjects/DoanSoServer/src/controller/UserController.java</file>
-            <file>file:/C:/Users/van%20thao/Documents/NetBeansProjects/DoanSoServer/src/service/ClientManager.java</file>
-            <file>file:/C:/Users/van%20thao/Documents/NetBeansProjects/DoanSoServer/src/run/ServerRun.java</file>
-            <file>file:/C:/Users/van%20thao/Documents/NetBeansProjects/DoanSoServer/src/connection/DatabaseConnection.java</file>
-            <file>file:/C:/Users/van%20thao/Documents/NetBeansProjects/DoanSoServer/src/model/UserModel.java</file>
-            <file>file:/C:/Users/van%20thao/Documents/NetBeansProjects/DoanSoServer/src/service/Client.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/BTL-LTM/DoanSoServer/src/service/ClientManager.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/BTL-LTM/DoanSoServer/src/service/Client.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/BTL-LTM/DoanSoServer/src/model/UserModel.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/BTL-LTM/DoanSoServer/src/run/ServerRun.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/BTL-LTM/DoanSoServer/src/controller/UserController.java</file>
+            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/BTL-LTM/DoanSoServer/src/connection/DatabaseConnection.java</file>
         </group>
     </open-files>
 </project-private>

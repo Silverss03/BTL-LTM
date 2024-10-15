@@ -15,6 +15,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import run.ClientRun;
+import view.RankView;
+import view.RankWinView;
 
 /**
  *
@@ -87,6 +89,30 @@ public class SocketHandler {
                     
                     case "EXIT":
                         running = false;
+                     case "RANK":
+                        onReceiveRank(received);
+                        break;
+                    case "RANKWIN":
+                        onReceiveRankWin(received);
+                        break;
+                     case "INVITE_TO_CHAT":
+                        onReceiveInviteToChat(received);
+                        break;
+                    case "GET_INFO_USER":
+                        onReceiveGetInfoUser(received);
+                        break;
+                    case "ACCEPT_MESSAGE":
+                        onReceiveAcceptMessage(received);
+                        break;
+                    case "NOT_ACCEPT_MESSAGE":
+                        onReceiveNotAcceptMessage(received);
+                        break;
+                    case "LEAVE_TO_CHAT":
+                        onReceiveLeaveChat(received);
+                        break;
+                    case "CHAT_MESSAGE":
+                        onReceiveChatMessage(received);
+                        break;
                 }
 
             } catch (IOException ex) {
@@ -114,11 +140,160 @@ public class SocketHandler {
      * *
      * Handle from client
      */
+    public void getRank() {
+    sendData("RANK");
+}
+      public void getRankWin() {
+     sendData("RANKWIN");
+}
+      public void inviteToChat (String userInvited) {
+        sendData("INVITE_TO_CHAT;" + loginUser + ";" + userInvited);
+    }
+    
+    public void leaveChat (String userInvited) {
+        sendData("LEAVE_TO_CHAT;" + loginUser + ";" + userInvited);
+    }
+    
+    public void sendMessage (String userInvited, String message) {
+        String chat = "[" + loginUser + "] : " + message + "\n";
+        ClientRun.messageView.setContentChat(chat);
+            
+        sendData("CHAT_MESSAGE;" + loginUser + ";" + userInvited  + ";" + message);
+    }
+     public void getInfoUser(String username) {
+        sendData("GET_INFO_USER;" + username);
+    }
+
     public void login(String email, String password) {
         // prepare data
         String data = "LOGIN" + ";" + email + ";" + password;
         // send data
         sendData(data);
+    }
+    private void onReceiveRank(String received) {
+        StringBuilder rankDisplay = new StringBuilder();
+
+        String[] data = received.split(";");
+        for (int i = 0; i < data.length; i++) {
+            rankDisplay.append(data[i]).append(";");
+        }
+
+        if (ClientRun.rankView != null) {
+            ClientRun.rankView.updateRankDisplay(rankDisplay.toString());
+        } 
+
+            ClientRun.rankView = new RankView();
+            ClientRun.rankView.updateRankDisplay(rankDisplay.toString());
+            ClientRun.rankView.setVisible(true);
+
+    }
+    private void onReceiveGetInfoUser(String received) {
+        // get status from data
+        String[] splitted = received.split(";");
+        String status = splitted[1];
+
+        if (status.equals("success")) {
+            String userName = splitted[2];
+            String userScore =  splitted[3];
+            String userWin =  splitted[4];
+            String userDraw =  splitted[5];
+            String userLose =  splitted[6];
+            String userAvgCompetitor =  splitted[7];
+            String userAvgTime =  splitted[8];
+            String userStatus = splitted[9];
+            
+            ClientRun.openScene(ClientRun.SceneName.INFOPLAYER);
+            ClientRun.infoPlayerView.setInfoUser(userName, userScore, userWin, userDraw, userLose, userAvgCompetitor, userAvgTime, userStatus);
+        }
+    }
+     private void onReceiveInviteToChat(String received) {
+        // get status from data
+        String[] splitted = received.split(";");
+        String status = splitted[1];
+
+        if (status.equals("success")) {
+            String userHost = splitted[2];
+            String userInvited = splitted[3];
+            if (JOptionPane.showConfirmDialog(ClientRun.homeView, userHost + " want to chat with you?", "Chat?", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_NO_OPTION){
+                ClientRun.openScene(ClientRun.SceneName.MESSAGEVIEW);
+                ClientRun.messageView.setInfoUserChat(userHost);
+                sendData("ACCEPT_MESSAGE;" + userHost + ";" + userInvited);
+            } else {
+                sendData("NOT_ACCEPT_MESSAGE;" + userHost + ";" + userInvited);
+            }
+        }
+    }
+    
+    private void onReceiveAcceptMessage(String received) {
+        // get status from data
+        String[] splitted = received.split(";");
+        String status = splitted[1];
+
+        if (status.equals("success")) {
+            String userHost = splitted[2];
+            String userInvited = splitted[3];
+                
+            ClientRun.openScene(ClientRun.SceneName.MESSAGEVIEW);
+            ClientRun.messageView.setInfoUserChat(userInvited);
+        }
+    }
+    
+    private void onReceiveNotAcceptMessage(String received) {
+        // get status from data
+        String[] splitted = received.split(";");
+        String status = splitted[1];
+
+        if (status.equals("success")) {
+            String userHost = splitted[2];
+            String userInvited = splitted[3];
+                
+            JOptionPane.showMessageDialog(ClientRun.homeView, userInvited + " don't want to chat with you!");
+        }
+    }
+    
+    private void onReceiveLeaveChat(String received) {
+        // get status from data
+        String[] splitted = received.split(";");
+        String status = splitted[1];
+
+        if (status.equals("success")) {
+            String userHost = splitted[2];
+            String userInvited = splitted[3];
+            
+            ClientRun.closeScene(ClientRun.SceneName.MESSAGEVIEW);   
+            JOptionPane.showMessageDialog(ClientRun.homeView, userHost + " leave to chat!");
+        }
+    }
+     private void onReceiveChatMessage(String received) {
+        // get status from data
+        String[] splitted = received.split(";");
+        String status = splitted[1];
+
+        if (status.equals("success")) {
+            String userHost = splitted[2];
+            String userInvited = splitted[3];
+            String message = splitted[4];
+            
+            String chat = "[" + userHost + "] : " + message + "\n";
+            ClientRun.messageView.setContentChat(chat);
+        }
+    }
+    private void onReceiveRankWin(String received) {
+        StringBuilder rankDisplay = new StringBuilder();
+
+        String[] data = received.split(";");
+        for (int i = 0; i < data.length; i++) {
+            rankDisplay.append(data[i]).append(";");
+        }
+
+        if (ClientRun.rankWinView != null) {
+            ClientRun.rankWinView.updateRankDisplay(rankDisplay.toString());
+        } 
+
+            ClientRun.rankWinView = new RankWinView();
+            ClientRun.rankWinView.updateRankDisplay(rankDisplay.toString());
+            ClientRun.rankWinView.setVisible(true);
+
     }
 
     public void register(String email, String password) {
@@ -141,9 +316,7 @@ public class SocketHandler {
         sendData("GET_LIST_ONLINE");
     }
 
-    public void getInfoUser(String username) {
-        sendData("GET_INFO_USER;" + username);
-    }
+   
 
     public void checkStatusUser(String username) {
         sendData("CHECK_STATUS_USER;" + username);
@@ -191,7 +364,7 @@ public class SocketHandler {
             // auto set info user
             ClientRun.homeView.setUsername(loginUser);
             ClientRun.homeView.setUserScore(score);
-            ClientRun.homeView.info.setText("Thông tin: UserName: " + loginUser + "; điểm: " + score);
+//            ClientRun.homeView.info.setText("Thông tin: UserName: " + loginUser + "; điểm: " + score);
         }
     }
 
