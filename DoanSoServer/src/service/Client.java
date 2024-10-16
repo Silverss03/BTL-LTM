@@ -10,6 +10,7 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import run.ServerRun;
@@ -19,6 +20,7 @@ import run.ServerRun;
  * @author admin
  */
 public class Client implements Runnable {
+
     Socket s;
     DataInputStream dis;
     DataOutputStream dos;
@@ -26,6 +28,7 @@ public class Client implements Runnable {
     String loginUser;
     Client cCompetitor;
     
+    Room joinedRoom;
 
     public Client(Socket s) throws IOException {
         this.s = s;
@@ -48,14 +51,23 @@ public class Client implements Runnable {
 
                 System.out.println(received);
                 String type = received.split(";")[0];
-               
+
                 switch (type) {
                     case "LOGIN":
                         onReceiveLogin(received);
                         break;
                     case "REGISTER":
                         onReceiveRegister(received);
-                        break;                    
+                        break;
+                    case "GET_LIST_ONLINE":
+                        onReceiveGetListOnline();
+                        break;
+                    case "LOGOUT":
+                        onReceiveLogout();
+                        break;
+                    case "CHECK_STATUS_USER":
+                        onReceiveCheckStatusUser(received);
+                        break;
                 }
 
             } catch (IOException ex) {
@@ -78,7 +90,7 @@ public class Client implements Runnable {
             Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     // send data fucntions
     public String sendData(String data) {
         try {
@@ -90,7 +102,7 @@ public class Client implements Runnable {
             return "failed;" + e.getMessage();
         }
     }
-    
+
     private void onReceiveLogin(String received) {
         // get email / password from data
         String[] splitted = received.split(";");
@@ -104,11 +116,11 @@ public class Client implements Runnable {
             // set login user
             this.loginUser = username;
         }
-        
+
         // send result
         sendData("LOGIN" + ";" + result);
     }
-    
+
     private void onReceiveRegister(String received) {
         // get email / password from data
         String[] splitted = received.split(";");
@@ -121,9 +133,41 @@ public class Client implements Runnable {
         // send result
         sendData("REGISTER" + ";" + result);
     }
-    
-    
-         
+
+    private void onReceiveGetListOnline() {
+        String result = ServerRun.clientManager.getListUseOnline();
+
+        // send result
+        String msg = "GET_LIST_ONLINE" + ";" + result;
+        ServerRun.clientManager.broadcast(msg);
+    }
+
+    private void onReceiveLogout() {
+        this.loginUser = null;
+        // send result
+        sendData("LOGOUT" + ";" + "success");
+        onReceiveGetListOnline();
+    }
+
+    private void onReceiveCheckStatusUser(String received) {
+        String[] splitted = received.split(";");
+        String username = splitted[1];
+
+        String status = "";
+        Client c = ServerRun.clientManager.find(username);
+        if (c == null) {
+            status = "OFFLINE";
+        } else {
+            if (c.getJoinedRoom() == null) {
+                status = "ONLINE";
+            } else {
+                status = "INGAME";
+            }
+        }
+        // send result
+        sendData("CHECK_STATUS_USER" + ";" + username + ";" + status);
+    }
+
     // Get set
     public String getLoginUser() {
         return loginUser;
@@ -141,6 +185,10 @@ public class Client implements Runnable {
         this.cCompetitor = cCompetitor;
     }
 
-    
-    
+    public Room getJoinedRoom() {
+        return joinedRoom;
+    }
+        public void setJoinedRoom(Room joinedRoom) {
+        this.joinedRoom = joinedRoom;
+    }
 }

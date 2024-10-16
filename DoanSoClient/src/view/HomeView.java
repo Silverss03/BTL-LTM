@@ -72,6 +72,7 @@ public class HomeView extends javax.swing.JFrame {
         btnCreateRoom.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnCreateRoom.setText("Chơi");
         btnCreateRoom.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnCreateRoom.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnCreateRoom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCreateRoomActionPerformed(evt);
@@ -83,6 +84,7 @@ public class HomeView extends javax.swing.JFrame {
         btnRank.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnRank.setText("Bảng xếp hạng");
         btnRank.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnRank.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jPanel1.add(btnRank);
         btnRank.setBounds(448, 354, 200, 50);
 
@@ -91,6 +93,7 @@ public class HomeView extends javax.swing.JFrame {
         btnLogOut.setForeground(new java.awt.Color(255, 255, 255));
         btnLogOut.setText("Đăng xuất");
         btnLogOut.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnLogOut.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnLogOut.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLogOutActionPerformed(evt);
@@ -139,19 +142,25 @@ public class HomeView extends javax.swing.JFrame {
 
         tblUser.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null},
-                {null},
-                {null},
                 {null}
             },
             new String [] {
                 "Danh sách người chơi"
             }
-        ));
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
         jScrollPane.setViewportView(tblUser);
 
         btnRefresh.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         btnRefresh.setText("Refresh");
+        btnRefresh.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRefreshActionPerformed(evt);
