@@ -6,16 +6,18 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import connection.DatabaseConnection;
+import java.util.List;
 import model.UserModel;
 
 public class UserController {
+
     // SQL queries
     private final String INSERT_USER = "INSERT INTO users (username, password, score, win, draw, lose) VALUES (?, ?, 0, 0, 0, 0)";
     private final String CHECK_USER = "SELECT userId FROM users WHERE username = ? LIMIT 1";
     private final String LOGIN_USER = "SELECT username, password, score FROM users WHERE username = ? AND password = ?";
     private final String GET_INFO_USER = "SELECT username, score, win, draw, lose FROM users WHERE username = ?";
     private final String UPDATE_USER = "UPDATE users SET score = ?, win = ?, draw = ?, lose = ? WHERE username = ?";
-    
+
     // Database connection instance
     private final Connection con;
 
