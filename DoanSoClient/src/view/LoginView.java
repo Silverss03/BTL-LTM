@@ -1,23 +1,19 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package view;
 
 import run.ClientRun;
+
 /**
  *
  * @author admin
  */
 public class LoginView extends javax.swing.JFrame {
+
     /**
      * Creates new form LoginView
      */
     public LoginView() {
         initComponents();
     }
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -125,11 +121,14 @@ public class LoginView extends javax.swing.JFrame {
         String password = String.copyValueOf(tfPassword.getPassword());
 
         if (userName.equals("")) {
-                tfUsername.grabFocus();
+            tfUsername.grabFocus();
         } else if (password.equals("")) {
-                tfPassword.grabFocus();
+            tfPassword.grabFocus();
         } else {
             ClientRun.socketHandler.login(userName, password);
+
+            javax.swing.JOptionPane.showMessageDialog(this, "Đăng nhập thành công!", "Thông báo", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+
         }
     }//GEN-LAST:event_btnLoginActionPerformed
 

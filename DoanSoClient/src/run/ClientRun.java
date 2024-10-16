@@ -2,11 +2,13 @@ package run;
 
 import controller.SocketHandler;
 import view.ConnectServer;
+import view.GameView;
 import view.HomeView;
 import view.LoginView;
 import view.RegisterView;
 
 public class ClientRun {
+
     public enum SceneName {
         CONNECTSERVER,
         LOGIN,
@@ -22,19 +24,24 @@ public class ClientRun {
     public static LoginView loginView;
     public static RegisterView registerView;
     public static HomeView homeView;
+    public static GameView gameView;
 
     // controller 
     public static SocketHandler socketHandler;
 
     public ClientRun() {
         socketHandler = new SocketHandler();
-//        initScene();
+        initScene();
         openScene(SceneName.CONNECTSERVER);
     }
 
-//    public void initScene() {
-//        connectServer = new ConnectServer();
-//    }
+    public void initScene() {
+        connectServer = new ConnectServer();
+        loginView = new LoginView();
+        registerView = new RegisterView();
+        homeView = new HomeView();
+        gameView = new GameView();
+    }
 
     public static void openScene(SceneName sceneName) {
         if (null != sceneName) {
@@ -54,6 +61,10 @@ public class ClientRun {
                 case HOMEVIEW:
                     homeView = new HomeView();
                     homeView.setVisible(true);
+                    break;
+                case GAMEVIEW:
+                    gameView = new GameView();
+                    gameView.setVisible(true);
                     break;
                 default:
                     break;

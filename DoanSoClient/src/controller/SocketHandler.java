@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package controller;
 
 import java.io.DataInputStream;
@@ -16,10 +12,6 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import run.ClientRun;
 
-/**
- *
- * @author van thao
- */
 public class SocketHandler {
 
     Socket s;
@@ -84,7 +76,18 @@ public class SocketHandler {
                     case "REGISTER":
                         onReceiveRegister(received);
                         break;
-                    
+                    case "GET_LIST_ONLINE":
+                        onReceiveGetListOnline(received);
+                        break;
+                    case "LOGOUT":
+                        onReceiveLogout(received);
+                        break;
+                    case "INVITE_TO_PLAY":
+                        onReceiveInviteToPlay(received);
+                        break;
+                    case "CHECK_STATUS_USER":
+                        onReceiveCheckStatusUser(received);
+                        break;
                     case "EXIT":
                         running = false;
                 }
@@ -149,7 +152,9 @@ public class SocketHandler {
         sendData("CHECK_STATUS_USER;" + username);
     }
 
-   
+    public void inviteToPlay(String userInvited) {
+        sendData("INVITE_TO_PLAY;" + loginUser + ";" + userInvited);
+    }
 
     /**
      * *
@@ -182,7 +187,7 @@ public class SocketHandler {
             // lưu user login
             this.loginUser = splitted[2];
             this.score = Float.parseFloat(splitted[3]);
-            
+
             System.out.println(loginUser + " " + score);
             // chuyển scene
             ClientRun.closeScene(ClientRun.SceneName.LOGIN);
@@ -191,7 +196,6 @@ public class SocketHandler {
             // auto set info user
             ClientRun.homeView.setUsername(loginUser);
             ClientRun.homeView.setUserScore(score);
-            ClientRun.homeView.info.setText("Thông tin: UserName: " + loginUser + "; điểm: " + score);
         }
     }
 
@@ -213,7 +217,37 @@ public class SocketHandler {
         }
     }
 
+    private void onReceiveGetListOnline(String received) {
+        // get status from data
+        String[] splitted = received.split(";");
+        String status = splitted[1];
 
+        if (status.equals("success")) {
+            int userCount = Integer.parseInt(splitted[2]);
+
+            Vector vheader = new Vector();
+            vheader.add("User");
+
+            Vector vdata = new Vector();
+            if (userCount > 1) {
+                for (int i = 3; i < userCount + 3; i++) {
+                    String user = splitted[i];
+                    if (!user.equals(loginUser) && !user.equals("null")) {
+                        Vector vrow = new Vector();
+                        vrow.add(user);
+                        vdata.add(vrow);
+                    }
+                }
+
+                ClientRun.homeView.setListUser(vdata, vheader);
+            } else {
+                ClientRun.homeView.resetTblUser();
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(ClientRun.loginView, "Have some error!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
     private void onReceiveLogout(String received) {
         // get status from data
@@ -226,6 +260,33 @@ public class SocketHandler {
         }
     }
 
+    private void onReceiveInviteToPlay(String received) {
+        // get status from data
+        String[] splitted = received.split(";");
+        String status = splitted[1];
+
+        if (status.equals("success")) {
+            String userHost = splitted[2];
+            String userInvited = splitted[3];
+            String roomId = splitted[4];
+            if (JOptionPane.showConfirmDialog(ClientRun.homeView, userHost + " want to play game with you?", "Game?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
+                ClientRun.openScene(ClientRun.SceneName.GAMEVIEW);
+                ClientRun.gameView.setInfoPlayer(userHost);
+                roomIdPresent = roomId;
+                ClientRun.gameView.setStateUserInvited();
+                sendData("ACCEPT_PLAY;" + userHost + ";" + userInvited + ";" + roomId);
+            } else {
+                sendData("NOT_ACCEPT_PLAY;" + userHost + ";" + userInvited + ";" + roomId);
+            }
+        }
+    }
+
+    private void onReceiveCheckStatusUser(String received) {
+        // get status from data
+        String[] splitted = received.split(";");
+        String status = splitted[2];
+        ClientRun.homeView.setStatusCompetitor(status);
+    }
 
     // get set
     public String getLoginUser() {
@@ -259,5 +320,4 @@ public class SocketHandler {
     public void setScore(float score) {
         this.score = score;
     }
-
 }
