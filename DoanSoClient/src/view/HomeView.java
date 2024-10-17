@@ -48,13 +48,13 @@ public class HomeView extends javax.swing.JFrame {
         btnRank = new javax.swing.JButton();
         btnLogOut = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane = new javax.swing.JScrollPane();
+        tblUser = new javax.swing.JTable();
+        btnRefresh = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         lbUsername = new javax.swing.JLabel();
         lbScore = new javax.swing.JLabel();
-        jScrollPane = new javax.swing.JScrollPane();
-        tblUser = new javax.swing.JTable();
-        btnRefresh = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 102, 51));
@@ -67,7 +67,7 @@ public class HomeView extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("LUCKY CARDS");
         jPanel1.add(jLabel2);
-        jLabel2.setBounds(338, 6, 432, 85);
+        jLabel2.setBounds(80, 10, 432, 85);
 
         btnCreateRoom.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnCreateRoom.setText("Chơi");
@@ -79,14 +79,14 @@ public class HomeView extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btnCreateRoom);
-        btnCreateRoom.setBounds(448, 264, 200, 50);
+        btnCreateRoom.setBounds(180, 250, 200, 50);
 
         btnRank.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnRank.setText("Bảng xếp hạng");
         btnRank.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         btnRank.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jPanel1.add(btnRank);
-        btnRank.setBounds(448, 354, 200, 50);
+        btnRank.setBounds(180, 340, 200, 50);
 
         btnLogOut.setBackground(new java.awt.Color(255, 51, 51));
         btnLogOut.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -100,45 +100,11 @@ public class HomeView extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btnLogOut);
-        btnLogOut.setBounds(448, 433, 200, 50);
+        btnLogOut.setBounds(180, 430, 200, 50);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/background.jpg"))); // NOI18N
         jPanel1.add(jLabel1);
-        jLabel1.setBounds(0, 0, 1100, 770);
-
-        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/avatar.png"))); // NOI18N
-
-        lbUsername.setText("Player:");
-
-        lbScore.setText("Tổng điểm:");
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbUsername)
-                    .addComponent(lbScore))
-                .addContainerGap(88, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(lbUsername)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbScore)))
-                .addContainerGap())
-        );
+        jLabel1.setBounds(0, 0, 600, 600);
 
         tblUser.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -158,6 +124,9 @@ public class HomeView extends javax.swing.JFrame {
         });
         jScrollPane.setViewportView(tblUser);
 
+        jPanel1.add(jScrollPane);
+        jScrollPane.setBounds(600, 100, 200, 460);
+
         btnRefresh.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         btnRefresh.setText("Refresh");
         btnRefresh.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -166,32 +135,60 @@ public class HomeView extends javax.swing.JFrame {
                 btnRefreshActionPerformed(evt);
             }
         });
+        jPanel1.add(btnRefresh);
+        btnRefresh.setBounds(600, 560, 200, 40);
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/avatar.png"))); // NOI18N
+
+        lbUsername.setText("Player:");
+
+        lbScore.setText("Tổng điểm:");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbUsername)
+                    .addComponent(lbScore))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(lbUsername)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbScore)))
+                .addContainerGap())
+        );
+
+        jPanel1.add(jPanel3);
+        jPanel3.setBounds(600, 0, 172, 100);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(btnRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 610, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE))
         );
 
         pack();
-        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCreateRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateRoomActionPerformed
