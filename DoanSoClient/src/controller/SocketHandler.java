@@ -11,6 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import run.ClientRun;
+import view.RankView;
+import view.RankWinView;
 
 public class SocketHandler {
 
@@ -88,6 +90,12 @@ public class SocketHandler {
                     case "CHECK_STATUS_USER":
                         onReceiveCheckStatusUser(received);
                         break;
+                    case "RANK":
+                        onReceiveRank(received);
+                        break;
+                    case "RANKWIN":
+                        onReceiveRankWin(received);
+                        break;
                     case "EXIT":
                         running = false;
                 }
@@ -117,6 +125,7 @@ public class SocketHandler {
      * *
      * Handle from client
      */
+    
     public void login(String email, String password) {
         // prepare data
         String data = "LOGIN" + ";" + email + ";" + password;
@@ -129,6 +138,12 @@ public class SocketHandler {
         String data = "REGISTER" + ";" + email + ";" + password;
         // send data
         sendData(data);
+    }
+    public void getRank() {
+        sendData("RANK");
+    }
+    public void getRankWin() {
+        sendData("RANKWIN");
     }
 
     public void logout() {
@@ -248,7 +263,40 @@ public class SocketHandler {
             JOptionPane.showMessageDialog(ClientRun.loginView, "Have some error!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
+private void onReceiveRank(String received) {
+        StringBuilder rankDisplay = new StringBuilder();
 
+        String[] data = received.split(";");
+        for (int i = 0; i < data.length; i++) {
+            rankDisplay.append(data[i]).append(";");
+        }
+
+        if (ClientRun.rankView != null) {
+            ClientRun.rankView.updateRankDisplay(rankDisplay.toString());
+        } 
+
+            ClientRun.rankView = new RankView();
+            ClientRun.rankView.updateRankDisplay(rankDisplay.toString());
+            ClientRun.rankView.setVisible(true);
+
+    }
+ private void onReceiveRankWin(String received) {
+        StringBuilder rankDisplay = new StringBuilder();
+
+        String[] data = received.split(";");
+        for (int i = 0; i < data.length; i++) {
+            rankDisplay.append(data[i]).append(";");
+        }
+
+        if (ClientRun.rankWinView != null) {
+            ClientRun.rankWinView.updateRankDisplay(rankDisplay.toString());
+        } 
+
+            ClientRun.rankWinView = new RankWinView();
+            ClientRun.rankWinView.updateRankDisplay(rankDisplay.toString());
+            ClientRun.rankWinView.setVisible(true);
+
+    }
     private void onReceiveLogout(String received) {
         // get status from data
         String[] splitted = received.split(";");

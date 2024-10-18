@@ -62,6 +62,12 @@ public class Client implements Runnable {
                     case "GET_LIST_ONLINE":
                         onReceiveGetListOnline();
                         break;
+                    case "RANK":
+                        onReceiveRank();
+                        break;
+                    case "RANKWIN":
+                        onReceiveRankWin();
+                        break; 
                     case "LOGOUT":
                         onReceiveLogout();
                         break;
@@ -176,7 +182,14 @@ public class Client implements Runnable {
     public void setLoginUser(String loginUser) {
         this.loginUser = loginUser;
     }
-
+    private void onReceiveRank() {
+         String result = new UserController().getRank();
+         sendData(result);
+    }
+    private void onReceiveRankWin() {
+         String result = new UserController().getRankWin();
+         sendData(result);
+    }
     public Client getcCompetitor() {
         return cCompetitor;
     }

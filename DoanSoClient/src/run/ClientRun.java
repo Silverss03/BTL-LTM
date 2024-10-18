@@ -5,6 +5,8 @@ import view.ConnectServer;
 import view.GameView;
 import view.HomeView;
 import view.LoginView;
+import view.RankView;
+import view.RankWinView;
 import view.RegisterView;
 
 public class ClientRun {
@@ -16,6 +18,8 @@ public class ClientRun {
         HOMEVIEW,
         INFOPLAYER,
         MESSAGEVIEW,
+        RANKVIEW,
+        RANKWINVIEW,
         GAMEVIEW
     }
 
@@ -23,6 +27,8 @@ public class ClientRun {
     public static ConnectServer connectServer;
     public static LoginView loginView;
     public static RegisterView registerView;
+ public static RankView rankView;
+    public static RankWinView rankWinView;
     public static HomeView homeView;
     public static GameView gameView;
 
@@ -39,6 +45,8 @@ public class ClientRun {
         connectServer = new ConnectServer();
         loginView = new LoginView();
         registerView = new RegisterView();
+        rankView = new RankView();
+        rankWinView = new RankWinView();
         homeView = new HomeView();
         gameView = new GameView();
     }
@@ -61,6 +69,14 @@ public class ClientRun {
                 case HOMEVIEW:
                     homeView = new HomeView();
                     homeView.setVisible(true);
+                    break;
+                case RANKVIEW:
+                    rankView = new RankView();
+                    rankView.setVisible(true);
+                    break;
+                case RANKWINVIEW:
+                    rankWinView = new RankWinView();
+                    rankWinView.setVisible(true);
                     break;
                 case GAMEVIEW:
                     gameView = new GameView();
@@ -87,7 +103,12 @@ public class ClientRun {
                 case HOMEVIEW:
                     homeView.dispose();
                     break;
-
+                case RANKVIEW:
+                    if (rankView != null) rankView.dispose();
+                    break;
+                case RANKWINVIEW:
+                    if (rankWinView != null) rankWinView.dispose();
+                    break;
                 default:
                     break;
             }
@@ -99,6 +120,8 @@ public class ClientRun {
         loginView.dispose();
         registerView.dispose();
         homeView.dispose();
+        rankView.dispose();
+        rankWinView.dispose();
     }
 
     public static void main(String[] args) {
