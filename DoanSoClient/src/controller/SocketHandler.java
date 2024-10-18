@@ -188,7 +188,7 @@ public class SocketHandler {
      * *
      * Handle receive data from server
      */
-    private void onReceiveLogin(String received) {
+     private void onReceiveLogin(String received) {
         // get status from data
         String[] splitted = received.split(";");
         String status = splitted[1];
@@ -263,7 +263,7 @@ public class SocketHandler {
             JOptionPane.showMessageDialog(ClientRun.loginView, "Have some error!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
-private void onReceiveRank(String received) {
+    private void onReceiveRank(String received) {
         StringBuilder rankDisplay = new StringBuilder();
 
         String[] data = received.split(";");
@@ -280,7 +280,7 @@ private void onReceiveRank(String received) {
             ClientRun.rankView.setVisible(true);
 
     }
- private void onReceiveRankWin(String received) {
+    private void onReceiveRankWin(String received) {
         StringBuilder rankDisplay = new StringBuilder();
 
         String[] data = received.split(";");
