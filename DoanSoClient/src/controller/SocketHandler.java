@@ -188,7 +188,7 @@ public class SocketHandler {
      * *
      * Handle receive data from server
      */
-        private void onReceiveLogin(String received) {
+         private void onReceiveLogin(String received) {
         // get status from data
         String[] splitted = received.split(";");
         String status = splitted[1];

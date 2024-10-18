@@ -55,7 +55,7 @@ public class HomeView extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         lbUsername = new javax.swing.JLabel();
         lbScore = new javax.swing.JLabel();
-        btnView = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 102, 51));
@@ -64,11 +64,11 @@ public class HomeView extends javax.swing.JFrame {
         jPanel1.setPreferredSize(new java.awt.Dimension(1100, 97));
         jPanel1.setLayout(null);
 
-        jLabel2.setFont(new java.awt.Font("Algerian", 1, 48)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Algerian", 1, 64)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("LUCKY CARDS");
         jPanel1.add(jLabel2);
-        jLabel2.setBounds(130, 10, 330, 72);
+        jLabel2.setBounds(80, 10, 464, 82);
 
         btnCreateRoom.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnCreateRoom.setText("Chơi");
@@ -80,19 +80,19 @@ public class HomeView extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btnCreateRoom);
-        btnCreateRoom.setBounds(190, 250, 200, 50);
+        btnCreateRoom.setBounds(180, 250, 200, 50);
 
         btnRank.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnRank.setText("Bảng xếp hạng");
-         btnRank.addActionListener(new java.awt.event.ActionListener() {
+        btnRank.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        btnRank.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnRank.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRankActionPerformed(evt);
             }
         });
-        btnRank.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        btnRank.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         jPanel1.add(btnRank);
-        btnRank.setBounds(190, 340, 200, 50);
+        btnRank.setBounds(180, 340, 200, 50);
 
         btnLogOut.setBackground(new java.awt.Color(255, 51, 51));
         btnLogOut.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -106,7 +106,7 @@ public class HomeView extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btnLogOut);
-        btnLogOut.setBounds(190, 430, 200, 50);
+        btnLogOut.setBounds(180, 430, 200, 50);
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/background.jpg"))); // NOI18N
         jPanel1.add(jLabel1);
@@ -135,11 +135,10 @@ public class HomeView extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tblUser.getTableHeader().setReorderingAllowed(false);
         jScrollPane.setViewportView(tblUser);
         if (tblUser.getColumnModel().getColumnCount() > 0) {
             tblUser.getColumnModel().getColumn(0).setResizable(false);
-            tblUser.getColumnModel().getColumn(0).setPreferredWidth(190);
+            tblUser.getColumnModel().getColumn(0).setPreferredWidth(180);
             tblUser.getColumnModel().getColumn(1).setResizable(false);
         }
 
@@ -147,7 +146,7 @@ public class HomeView extends javax.swing.JFrame {
         jScrollPane.setBounds(600, 100, 200, 460);
 
         btnRefresh.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnRefresh.setText("Làm mới");
+        btnRefresh.setText("Refresh");
         btnRefresh.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -192,17 +191,12 @@ public class HomeView extends javax.swing.JFrame {
         );
 
         jPanel1.add(jPanel3);
-        jPanel3.setBounds(600, 0, 200, 100);
+        jPanel3.setBounds(600, 0, 172, 100);
 
-        btnView.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnView.setText("Thông tin");
-        btnView.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnViewActionPerformed(evt);
-            }
-        });
-        jPanel1.add(btnView);
-        btnView.setBounds(700, 560, 100, 40);
+        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
+        jButton1.setText("Thông tin");
+        jPanel1.add(jButton1);
+        jButton1.setBounds(700, 560, 100, 40);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -258,23 +252,27 @@ public class HomeView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnLogOutActionPerformed
 
+
     private void btnViewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnViewActionPerformed
-    private void btnRankActionPerformed(java.awt.event.ActionEvent evt) {
-         ClientRun.socketHandler.getRank();
-    }
+
+    private void btnRankActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRankActionPerformed
+        ClientRun.socketHandler.getRank();
+    }//GEN-LAST:event_btnRankActionPerformed
+   
 
     /**
      * @param args the command line arguments
      */
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCreateRoom;
     private javax.swing.JButton btnLogOut;
     private javax.swing.JButton btnRank;
     private javax.swing.JButton btnRefresh;
-    private javax.swing.JButton btnView;
+    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
