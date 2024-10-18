@@ -195,6 +195,11 @@ public class HomeView extends javax.swing.JFrame {
 
         jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jButton1.setText("Thông tin");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton1);
         jButton1.setBounds(700, 560, 100, 40);
 
@@ -260,6 +265,21 @@ public class HomeView extends javax.swing.JFrame {
     private void btnRankActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRankActionPerformed
         ClientRun.socketHandler.getRank();
     }//GEN-LAST:event_btnRankActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+         int row = tblUser.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(HomeView.this, "You haven't chosen anyone yet! Please select one user." , "ERROR", JOptionPane.ERROR_MESSAGE);
+        } else {
+            String userSelected = String.valueOf(tblUser.getValueAt(row, 0));
+            System.out.println(userSelected);
+            if (userSelected.equals(ClientRun.socketHandler.getLoginUser())) {
+                JOptionPane.showMessageDialog(HomeView.this, "You can not see yourself." , "ERROR", JOptionPane.ERROR_MESSAGE);
+            } else {
+               ClientRun.socketHandler.getInfoUser(userSelected);
+            }
+        }       
+    }//GEN-LAST:event_jButton1ActionPerformed
    
 
     /**

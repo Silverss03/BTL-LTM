@@ -4,7 +4,9 @@ import controller.SocketHandler;
 import view.ConnectServer;
 import view.GameView;
 import view.HomeView;
+import view.InfoPlayerView;
 import view.LoginView;
+import view.MessageView;
 import view.RankView;
 import view.RankWinView;
 import view.RegisterView;
@@ -27,11 +29,13 @@ public class ClientRun {
     public static ConnectServer connectServer;
     public static LoginView loginView;
     public static RegisterView registerView;
- public static RankView rankView;
+    public static RankView rankView;
     public static RankWinView rankWinView;
     public static HomeView homeView;
     public static GameView gameView;
-
+    public static InfoPlayerView infoPlayerView;
+    public static MessageView messageView;
+    
     // controller 
     public static SocketHandler socketHandler;
 
@@ -48,6 +52,8 @@ public class ClientRun {
         rankView = new RankView();
         rankWinView = new RankWinView();
         homeView = new HomeView();
+        infoPlayerView = new InfoPlayerView();
+        messageView = new MessageView();
         gameView = new GameView();
     }
 
@@ -69,6 +75,14 @@ public class ClientRun {
                 case HOMEVIEW:
                     homeView = new HomeView();
                     homeView.setVisible(true);
+                    break;
+                case INFOPLAYER:
+                    infoPlayerView = new InfoPlayerView();
+                    infoPlayerView.setVisible(true);
+                    break;
+                case MESSAGEVIEW:
+                    messageView = new MessageView();
+                    messageView.setVisible(true);
                     break;
                 case RANKVIEW:
                     rankView = new RankView();
@@ -103,6 +117,12 @@ public class ClientRun {
                 case HOMEVIEW:
                     homeView.dispose();
                     break;
+                case INFOPLAYER:
+                    infoPlayerView.dispose();
+                    break;
+                case MESSAGEVIEW:
+                    messageView.dispose();
+                    break;
                 case RANKVIEW:
                     if (rankView != null) rankView.dispose();
                     break;
@@ -120,6 +140,8 @@ public class ClientRun {
         loginView.dispose();
         registerView.dispose();
         homeView.dispose();
+        messageView.dispose();
+        infoPlayerView.dispose();
         rankView.dispose();
         rankWinView.dispose();
     }
