@@ -143,7 +143,6 @@ public class SocketHandler {
      * *
      * Handle from client
      */
-    
     public void login(String email, String password) {
         // prepare data
         String data = "LOGIN" + ";" + email + ";" + password;
@@ -157,9 +156,11 @@ public class SocketHandler {
         // send data
         sendData(data);
     }
+
     public void getRank() {
         sendData("RANK");
     }
+
     public void getRankWin() {
         sendData("RANKWIN");
     }
@@ -180,26 +181,25 @@ public class SocketHandler {
     public void getInfoUser(String username) {
         sendData("GET_INFO_USER;" + username);
     }
-    
 
     public void checkStatusUser(String username) {
         sendData("CHECK_STATUS_USER;" + username);
     }
-     public void inviteToChat (String userInvited) {
+
+    public void inviteToChat(String userInvited) {
         sendData("INVITE_TO_CHAT;" + loginUser + ";" + userInvited);
     }
-    
-    public void leaveChat (String userInvited) {
+
+    public void leaveChat(String userInvited) {
         sendData("LEAVE_TO_CHAT;" + loginUser + ";" + userInvited);
     }
-    
-    public void sendMessage (String userInvited, String message) {
+
+    public void sendMessage(String userInvited, String message) {
         String chat = "[" + loginUser + "] : " + message + "\n";
         ClientRun.messageView.setContentChat(chat);
-            
-        sendData("CHAT_MESSAGE;" + loginUser + ";" + userInvited  + ";" + message);
+
+        sendData("CHAT_MESSAGE;" + loginUser + ";" + userInvited + ";" + message);
     }
-    
 
     public void inviteToPlay(String userInvited) {
         sendData("INVITE_TO_PLAY;" + loginUser + ";" + userInvited);
@@ -222,7 +222,7 @@ public class SocketHandler {
      * *
      * Handle receive data from server
      */
-         private void onReceiveLogin(String received) {
+    private void onReceiveLogin(String received) {
         // get status from data
         String[] splitted = received.split(";");
         String status = splitted[1];
@@ -248,7 +248,6 @@ public class SocketHandler {
         }
     }
 
-
     private void onReceiveRegister(String received) {
         // get status from data
         String[] splitted = received.split(";");
@@ -266,23 +265,25 @@ public class SocketHandler {
             ClientRun.openScene(ClientRun.SceneName.LOGIN);
         }
     }
-    private void onReceiveInviteToChat(String received) {
-           // get status from data
-           String[] splitted = received.split(";");
-           String status = splitted[1];
 
-           if (status.equals("success")) {
-               String userHost = splitted[2];
-               String userInvited = splitted[3];
-               if (JOptionPane.showConfirmDialog(ClientRun.homeView, userHost + " want to chat with you?", "Chat?", JOptionPane.YES_NO_OPTION)==JOptionPane.YES_NO_OPTION){
-                   ClientRun.openScene(ClientRun.SceneName.MESSAGEVIEW);
-                   ClientRun.messageView.setInfoUserChat(userHost);
-                   sendData("ACCEPT_MESSAGE;" + userHost + ";" + userInvited);
-               } else {
-                   sendData("NOT_ACCEPT_MESSAGE;" + userHost + ";" + userInvited);
-               }
-           }
-       }
+    private void onReceiveInviteToChat(String received) {
+        // get status from data
+        String[] splitted = received.split(";");
+        String status = splitted[1];
+
+        if (status.equals("success")) {
+            String userHost = splitted[2];
+            String userInvited = splitted[3];
+            if (JOptionPane.showConfirmDialog(ClientRun.homeView, userHost + " want to chat with you?", "Chat?", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_NO_OPTION) {
+                ClientRun.openScene(ClientRun.SceneName.MESSAGEVIEW);
+                ClientRun.messageView.setInfoUserChat(userHost);
+                sendData("ACCEPT_MESSAGE;" + userHost + ";" + userInvited);
+            } else {
+                sendData("NOT_ACCEPT_MESSAGE;" + userHost + ";" + userInvited);
+            }
+        }
+    }
+
     private void onReceiveAcceptMessage(String received) {
         // get status from data
         String[] splitted = received.split(";");
@@ -291,11 +292,12 @@ public class SocketHandler {
         if (status.equals("success")) {
             String userHost = splitted[2];
             String userInvited = splitted[3];
-                
+
             ClientRun.openScene(ClientRun.SceneName.MESSAGEVIEW);
             ClientRun.messageView.setInfoUserChat(userInvited);
         }
     }
+
     private void onReceiveNotAcceptMessage(String received) {
         // get status from data
         String[] splitted = received.split(";");
@@ -304,11 +306,12 @@ public class SocketHandler {
         if (status.equals("success")) {
             String userHost = splitted[2];
             String userInvited = splitted[3];
-                
+
             JOptionPane.showMessageDialog(ClientRun.homeView, userInvited + " don't want to chat with you!");
         }
     }
-     private void onReceiveLeaveChat(String received) {
+
+    private void onReceiveLeaveChat(String received) {
         // get status from data
         String[] splitted = received.split(";");
         String status = splitted[1];
@@ -316,12 +319,13 @@ public class SocketHandler {
         if (status.equals("success")) {
             String userHost = splitted[2];
             String userInvited = splitted[3];
-            
-            ClientRun.closeScene(ClientRun.SceneName.MESSAGEVIEW);   
+
+            ClientRun.closeScene(ClientRun.SceneName.MESSAGEVIEW);
             JOptionPane.showMessageDialog(ClientRun.homeView, userHost + " leave to chat!");
         }
     }
-     private void onReceiveChatMessage(String received) {
+
+    private void onReceiveChatMessage(String received) {
         // get status from data
         String[] splitted = received.split(";");
         String status = splitted[1];
@@ -330,30 +334,32 @@ public class SocketHandler {
             String userHost = splitted[2];
             String userInvited = splitted[3];
             String message = splitted[4];
-            
+
             String chat = "[" + userHost + "] : " + message + "\n";
             ClientRun.messageView.setContentChat(chat);
         }
     }
-    
+
     private void onReceiveGetListOnline(String received) {
         // get status from data
         String[] splitted = received.split(";");
         String status = splitted[1];
-
         if (status.equals("success")) {
             int userCount = Integer.parseInt(splitted[2]);
 
             Vector vheader = new Vector();
-            vheader.add("User");
+            vheader.add("Người chơi");
+            vheader.add("Điểm");
 
             Vector vdata = new Vector();
             if (userCount > 1) {
-                for (int i = 3; i < userCount + 3; i++) {
+                for (int i = 3; i < userCount + 4; i+=2) {
                     String user = splitted[i];
+                    float score = Float.parseFloat(splitted[i + 1]);
                     if (!user.equals(loginUser) && !user.equals("null")) {
                         Vector vrow = new Vector();
                         vrow.add(user);
+                        vrow.add(score);
                         vdata.add(vrow);
                     }
                 }
@@ -367,6 +373,7 @@ public class SocketHandler {
             JOptionPane.showMessageDialog(ClientRun.loginView, "Have some error!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
+
     private void onReceiveRank(String received) {
         StringBuilder rankDisplay = new StringBuilder();
 
@@ -377,13 +384,14 @@ public class SocketHandler {
 
         if (ClientRun.rankView != null) {
             ClientRun.rankView.updateRankDisplay(rankDisplay.toString());
-        } 
+        }
 
-            ClientRun.rankView = new RankView();
-            ClientRun.rankView.updateRankDisplay(rankDisplay.toString());
-            ClientRun.rankView.setVisible(true);
+        ClientRun.rankView = new RankView();
+        ClientRun.rankView.updateRankDisplay(rankDisplay.toString());
+        ClientRun.rankView.setVisible(true);
 
     }
+
     private void onReceiveRankWin(String received) {
         StringBuilder rankDisplay = new StringBuilder();
 
@@ -394,13 +402,14 @@ public class SocketHandler {
 
         if (ClientRun.rankWinView != null) {
             ClientRun.rankWinView.updateRankDisplay(rankDisplay.toString());
-        } 
+        }
 
-            ClientRun.rankWinView = new RankWinView();
-            ClientRun.rankWinView.updateRankDisplay(rankDisplay.toString());
-            ClientRun.rankWinView.setVisible(true);
+        ClientRun.rankWinView = new RankWinView();
+        ClientRun.rankWinView.updateRankDisplay(rankDisplay.toString());
+        ClientRun.rankWinView.setVisible(true);
 
     }
+
     private void onReceiveLogout(String received) {
         // get status from data
         String[] splitted = received.split(";");
@@ -432,25 +441,27 @@ public class SocketHandler {
             }
         }
     }
-    private void onReceiveGetInfoUser(String received) {
-            // get status from data
-            String[] splitted = received.split(";");
-            String status = splitted[1];
 
-            if (status.equals("success")) {
-                String userName = splitted[2];
-                String userScore =  splitted[3];
-                String userWin =  splitted[4];
-                String userDraw =  splitted[5];
-                String userLose =  splitted[6];
+    private void onReceiveGetInfoUser(String received) {
+        // get status from data
+        String[] splitted = received.split(";");
+        String status = splitted[1];
+
+        if (status.equals("success")) {
+            String userName = splitted[2];
+            String userScore = splitted[3];
+            String userWin = splitted[4];
+            String userDraw = splitted[5];
+            String userLose = splitted[6];
 //                String userAvgCompetitor =  splitted[7];
 //                String userAvgTime =  splitted[8];
-                String userStatus = splitted[7];
+            String userStatus = splitted[7];
 
-                ClientRun.openScene(ClientRun.SceneName.INFOPLAYER);
-                ClientRun.infoPlayerView.setInfoUser(userName, userScore, userWin, userDraw, userLose, userStatus);
-            }
+            ClientRun.openScene(ClientRun.SceneName.INFOPLAYER);
+            ClientRun.infoPlayerView.setInfoUser(userName, userScore, userWin, userDraw, userLose, userStatus);
         }
+    }
+
     private void onReceiveCheckStatusUser(String received) {
         // get status from data
         String[] splitted = received.split(";");

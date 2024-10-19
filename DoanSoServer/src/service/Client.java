@@ -27,7 +27,8 @@ public class Client implements Runnable {
 
     String loginUser;
     Client cCompetitor;
-    
+    float score = 0;
+
     Room joinedRoom;
 
     public Client(Socket s) throws IOException {
@@ -85,7 +86,7 @@ public class Client implements Runnable {
                         break;
                     case "RANKWIN":
                         onReceiveRankWin();
-                        break; 
+                        break;
                     case "LOGOUT":
                         onReceiveLogout();
                         break;
@@ -132,13 +133,13 @@ public class Client implements Runnable {
         String[] splitted = received.split(";");
         String username = splitted[1];
         String password = splitted[2];
-
         // check login
         String result = new UserController().login(username, password);
 
         if (result.split(";")[0].equals("success")) {
             // set login user
             this.loginUser = username;
+            this.score = Float.parseFloat(result.split(";")[2]);
         }
 
         // send result
@@ -165,12 +166,13 @@ public class Client implements Runnable {
         String msg = "GET_LIST_ONLINE" + ";" + result;
         ServerRun.clientManager.broadcast(msg);
     }
-     private void onReceiveGetInfoUser(String received) {
+
+    private void onReceiveGetInfoUser(String received) {
         String[] splitted = received.split(";");
         String username = splitted[1];
-      
+
         String result = new UserController().getInfoUser(username);
-        
+
         String status = "";
         Client c = ServerRun.clientManager.find(username);
         if (c == null) {
@@ -183,57 +185,59 @@ public class Client implements Runnable {
             }
         }
         sendData("GET_INFO_USER" + ";" + result + ";" + status);
-     }
-     
-       private void onReceiveInviteToChat(String received) {
+    }
+
+    private void onReceiveInviteToChat(String received) {
         String[] splitted = received.split(";");
         String userHost = splitted[1];
         String userInvited = splitted[2];
-        
+
         // send result
         String msg = "INVITE_TO_CHAT;" + "success;" + userHost + ";" + userInvited;
         ServerRun.clientManager.sendToAClient(userInvited, msg);
     }
-    
+
     private void onReceiveAcceptMessage(String received) {
         String[] splitted = received.split(";");
         String userHost = splitted[1];
         String userInvited = splitted[2];
-        
+
         // send result
         String msg = "ACCEPT_MESSAGE;" + "success;" + userHost + ";" + userInvited;
         ServerRun.clientManager.sendToAClient(userHost, msg);
-    }  
+    }
+
     private void onReceiveNotAcceptMessage(String received) {
         String[] splitted = received.split(";");
         String userHost = splitted[1];
         String userInvited = splitted[2];
-        
+
         // send result
         String msg = "NOT_ACCEPT_MESSAGE;" + "success;" + userHost + ";" + userInvited;
         ServerRun.clientManager.sendToAClient(userHost, msg);
-    }      
-    
+    }
+
     private void onReceiveLeaveChat(String received) {
         String[] splitted = received.split(";");
         String userHost = splitted[1];
         String userInvited = splitted[2];
-        
+
         // send result
         String msg = "LEAVE_TO_CHAT;" + "success;" + userHost + ";" + userInvited;
         ServerRun.clientManager.sendToAClient(userInvited, msg);
-    }      
-    
+    }
+
     private void onReceiveChatMessage(String received) {
         String[] splitted = received.split(";");
         String userHost = splitted[1];
         String userInvited = splitted[2];
         String message = splitted[3];
-        
+
         // send result
         String msg = "CHAT_MESSAGE;" + "success;" + userHost + ";" + userInvited + ";" + message;
         ServerRun.clientManager.sendToAClient(userInvited, msg);
-    }    
+    }
+
     private void onReceiveLogout() {
         this.loginUser = null;
         // send result
@@ -268,14 +272,25 @@ public class Client implements Runnable {
     public void setLoginUser(String loginUser) {
         this.loginUser = loginUser;
     }
+
+    public float getScore() {
+        return score;
+    }
+
+    public void setScore(float score) {
+        this.score = score;
+    }
+
     private void onReceiveRank() {
-         String result = new UserController().getRank();
-         sendData(result);
+        String result = new UserController().getRank();
+        sendData(result);
     }
+
     private void onReceiveRankWin() {
-         String result = new UserController().getRankWin();
-         sendData(result);
+        String result = new UserController().getRankWin();
+        sendData(result);
     }
+
     public Client getcCompetitor() {
         return cCompetitor;
     }
@@ -287,7 +302,8 @@ public class Client implements Runnable {
     public Room getJoinedRoom() {
         return joinedRoom;
     }
-        public void setJoinedRoom(Room joinedRoom) {
+
+    public void setJoinedRoom(Room joinedRoom) {
         this.joinedRoom = joinedRoom;
     }
 }

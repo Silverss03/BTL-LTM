@@ -23,6 +23,17 @@ public class HomeView extends javax.swing.JFrame {
 
     public void setListUser(Vector vdata, Vector vheader) {
         tblUser.setModel(new DefaultTableModel(vdata, vheader));
+        tblUser.getColumnModel().getColumn(0).setPreferredWidth(150); // Cột thứ nhất
+        tblUser.getColumnModel().getColumn(1).setPreferredWidth(47);  // Cột thứ hai
+
+        // Tắt chế độ tự động thay đổi kích thước
+        tblUser.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+
+        // Tắt khả năng thay đổi độ rộng cột
+        for (int i = 0; i < tblUser.getColumnCount(); i++) {
+            tblUser.getColumnModel().getColumn(i).setMinWidth(tblUser.getColumnModel().getColumn(i).getPreferredWidth());
+            tblUser.getColumnModel().getColumn(i).setMaxWidth(tblUser.getColumnModel().getColumn(i).getPreferredWidth());
+        }
     }
 
     public void resetTblUser() {
@@ -55,7 +66,10 @@ public class HomeView extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         lbUsername = new javax.swing.JLabel();
         lbScore = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        btnMessage = new javax.swing.JButton();
+        btnGetInfo = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 102, 51));
@@ -68,7 +82,7 @@ public class HomeView extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("LUCKY CARDS");
         jPanel1.add(jLabel2);
-        jLabel2.setBounds(80, 10, 464, 82);
+        jLabel2.setBounds(80, 10, 432, 85);
 
         btnCreateRoom.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnCreateRoom.setText("Chơi");
@@ -114,39 +128,20 @@ public class HomeView extends javax.swing.JFrame {
 
         tblUser.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null}
+                {}
             },
             new String [] {
-                "Danh sách người chơi", "Điểm"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Float.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
             }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
+        ));
         jScrollPane.setViewportView(tblUser);
-        if (tblUser.getColumnModel().getColumnCount() > 0) {
-            tblUser.getColumnModel().getColumn(0).setResizable(false);
-            tblUser.getColumnModel().getColumn(0).setPreferredWidth(180);
-            tblUser.getColumnModel().getColumn(1).setResizable(false);
-        }
 
         jPanel1.add(jScrollPane);
-        jScrollPane.setBounds(600, 100, 200, 460);
+        jScrollPane.setBounds(600, 120, 200, 440);
 
-        btnRefresh.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        btnRefresh.setText("Refresh");
+        btnRefresh.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/refresh.png"))); // NOI18N
+        btnRefresh.setToolTipText("Làm mới");
         btnRefresh.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnRefresh.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -154,7 +149,7 @@ public class HomeView extends javax.swing.JFrame {
             }
         });
         jPanel1.add(btnRefresh);
-        btnRefresh.setBounds(600, 560, 100, 40);
+        btnRefresh.setBounds(600, 560, 70, 40);
 
         jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/avatar.png"))); // NOI18N
 
@@ -191,17 +186,52 @@ public class HomeView extends javax.swing.JFrame {
         );
 
         jPanel1.add(jPanel3);
-        jPanel3.setBounds(600, 0, 172, 100);
+        jPanel3.setBounds(600, 0, 200, 100);
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jButton1.setText("Thông tin");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnMessage.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        btnMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/chat.png"))); // NOI18N
+        btnMessage.setToolTipText("Nhắn tin");
+        btnMessage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnMessageActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1);
-        jButton1.setBounds(700, 560, 100, 40);
+        jPanel1.add(btnMessage);
+        btnMessage.setBounds(670, 560, 60, 40);
+
+        btnGetInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/info.png"))); // NOI18N
+        btnGetInfo.setToolTipText("Thông tin người chơi");
+        btnGetInfo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGetInfoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnGetInfo);
+        btnGetInfo.setBounds(730, 560, 70, 40);
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jLabel4.setText("     Danh sách người chơi");
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(19, Short.MAX_VALUE))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addComponent(jLabel4)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        jPanel1.add(jPanel2);
+        jPanel2.setBounds(600, 100, 200, 20);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -217,6 +247,7 @@ public class HomeView extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnCreateRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateRoomActionPerformed
@@ -266,37 +297,53 @@ public class HomeView extends javax.swing.JFrame {
         ClientRun.socketHandler.getRank();
     }//GEN-LAST:event_btnRankActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-         int row = tblUser.getSelectedRow();
+    private void btnMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMessageActionPerformed
+        int row = tblUser.getSelectedRow();
         if (row == -1) {
-            JOptionPane.showMessageDialog(HomeView.this, "You haven't chosen anyone yet! Please select one user." , "ERROR", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(HomeView.this, "You haven't chosen anyone yet! Please select one user.", "ERROR", JOptionPane.ERROR_MESSAGE);
         } else {
             String userSelected = String.valueOf(tblUser.getValueAt(row, 0));
             System.out.println(userSelected);
             if (userSelected.equals(ClientRun.socketHandler.getLoginUser())) {
-                JOptionPane.showMessageDialog(HomeView.this, "You can not see yourself." , "ERROR", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(HomeView.this, "You can not chat yourself.", "ERROR", JOptionPane.ERROR_MESSAGE);
             } else {
-               ClientRun.socketHandler.getInfoUser(userSelected);
+                ClientRun.socketHandler.inviteToChat(userSelected);
             }
-        }       
-    }//GEN-LAST:event_jButton1ActionPerformed
-   
+        }
+    }//GEN-LAST:event_btnMessageActionPerformed
+
+    private void btnGetInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGetInfoActionPerformed
+        int row = tblUser.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(HomeView.this, "You haven't chosen anyone yet! Please select one user.", "ERROR", JOptionPane.ERROR_MESSAGE);
+        } else {
+            String userSelected = String.valueOf(tblUser.getValueAt(row, 0));
+            System.out.println(userSelected);
+            if (userSelected.equals(ClientRun.socketHandler.getLoginUser())) {
+                JOptionPane.showMessageDialog(HomeView.this, "You can not see yourself.", "ERROR", JOptionPane.ERROR_MESSAGE);
+            } else {
+                ClientRun.socketHandler.getInfoUser(userSelected);
+            }
+        }
+    }//GEN-LAST:event_btnGetInfoActionPerformed
 
     /**
      * @param args the command line arguments
      */
 
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCreateRoom;
+    private javax.swing.JButton btnGetInfo;
     private javax.swing.JButton btnLogOut;
+    private javax.swing.JButton btnMessage;
     private javax.swing.JButton btnRank;
     private javax.swing.JButton btnRefresh;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane;
     private javax.swing.JLabel lbScore;

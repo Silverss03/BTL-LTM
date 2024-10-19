@@ -17,6 +17,7 @@ public class UserController {
     private final String LOGIN_USER = "SELECT username, password, score FROM users WHERE username = ? AND password = ?";
     private final String GET_INFO_USER = "SELECT username, score, win, draw, lose FROM users WHERE username = ?";
     private final String UPDATE_USER = "UPDATE users SET score = ?, win = ?, draw = ?, lose = ? WHERE username = ?";
+    private final String GET_NAME_AND_SCORE = "SELECT username, score FROM users WHERE username = ?";
 
     // Database connection instance
     private final Connection con;
@@ -93,7 +94,6 @@ public class UserController {
         }
         return null;
     }
-
     public boolean updateUser(UserModel user) {
         try {
             PreparedStatement p = con.prepareStatement(UPDATE_USER);
@@ -130,9 +130,10 @@ public class UserController {
         }
         return null;
     }
-     public String getRank() {
+
+    public String getRank() {
         StringBuilder rankList = new StringBuilder("RANK;");
-        String query = "SELECT username, score, win, draw, lose FROM users ORDER BY score DESC"; 
+        String query = "SELECT username, score, win, draw, lose FROM users ORDER BY score DESC";
 
         try {
             PreparedStatement p = con.prepareStatement(query);
@@ -162,10 +163,10 @@ public class UserController {
 
         return rankList.toString();
     }
-     
-     public String getRankWin() {
+
+    public String getRankWin() {
         StringBuilder rankList = new StringBuilder("RANKWIN;");
-        String query = "SELECT username, score, win, draw, lose FROM users ORDER BY win DESC"; 
+        String query = "SELECT username, score, win, draw, lose FROM users ORDER BY win DESC";
 
         try {
             PreparedStatement p = con.prepareStatement(query);

@@ -59,7 +59,7 @@ public class ClientManager {
     public String getListUseOnline () {
         String result = "success;" + String.valueOf(clients.size()) + ";";
         for(int i = 0; i < clients.size(); i++) {
-            result += clients.get(i).getLoginUser() + ";";
+            result += clients.get(i).getLoginUser() + ";" + clients.get(i).getScore() + ";";
         }
         return result;
     }
