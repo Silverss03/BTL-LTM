@@ -9,10 +9,14 @@ import controller.UserController;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import static java.lang.Math.random;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Card;
+import java.util.Random;
 import run.ServerRun;
 
 /**
@@ -24,7 +28,7 @@ public class Client implements Runnable {
     Socket s;
     DataInputStream dis;
     DataOutputStream dos;
-
+    Random random = new Random();
     String loginUser;
     Client cCompetitor;
     float score = 0;
@@ -43,12 +47,11 @@ public class Client implements Runnable {
     public void run() {
 
         String received;
-
+        boolean running = true;
         while (!ServerRun.isShutDown) {
             try {
                 // receive the request from client
                 received = dis.readUTF();
-                System.out.println("Client: " + received);
 
                 System.out.println(received);
                 String type = received.split(";")[0];
@@ -93,12 +96,42 @@ public class Client implements Runnable {
                     case "CHECK_STATUS_USER":
                         onReceiveCheckStatusUser(received);
                         break;
+                    case "INVITE_TO_PLAY":
+                        onReceiveInviteToPlay(received);
+                        break;
+                    case "ACCEPT_PLAY":
+                        onReceiveAcceptPlay(received);
+                        break;
+                    case "NOT_ACCEPT_PLAY":
+                        onReceiveNotAcceptPlay(received);
+                        break;
+                    case "LEAVE_TO_GAME":
+                        onReceiveLeaveGame(received);
+                        break;
+                    case "START_GAME":
+                        onReceiveStartGame(received);
+                        break;
+                    case "SUBMIT_RESULT":
+                        onReceiveSubmitResult(received);
+                        break;
+                    case "ASK_PLAY_AGAIN":
+                        onReceiveAskPlayAgain(received);
+                        break;
+                    case "CARD_FLIPPED":
+                        onReceiveCardFlipped(received) ; 
+                        break ;
+                        
+                    case "EXIT":
+                        running = false;
                 }
 
             } catch (IOException ex) {
                 System.out.println(ex);
                 break;
+            }catch (SQLException ex) {
+                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
             }
+            
         }
 
         try {
@@ -262,6 +295,198 @@ public class Client implements Runnable {
         }
         // send result
         sendData("CHECK_STATUS_USER" + ";" + username + ";" + status);
+    }
+    
+    private void onReceiveInviteToPlay(String received) {
+        String[] splitted = received.split(";");
+        String userHost = splitted[1];
+        String userInvited = splitted[2];
+        
+        // create new room
+        joinedRoom = ServerRun.roomManager.createRoom();
+        // add client
+        Client c = ServerRun.clientManager.find(loginUser);
+        joinedRoom.addClient(this);
+        cCompetitor = ServerRun.clientManager.find(userInvited);
+        
+        // send result
+        String msg = "INVITE_TO_PLAY;" + "success;" + userHost + ";" + userInvited + ";" + joinedRoom.getId();
+        ServerRun.clientManager.sendToAClient(userInvited, msg);
+    }
+    
+    private void onReceiveAcceptPlay(String received) {
+        String[] splitted = received.split(";");
+        String userHost = splitted[1];
+        String userInvited = splitted[2];
+        String roomId = splitted[3];
+        
+        Room room = ServerRun.roomManager.find(roomId);
+        joinedRoom = room;
+        joinedRoom.addClient(this);
+        
+        cCompetitor = ServerRun.clientManager.find(userHost);
+        
+        // send result
+        String msg = "ACCEPT_PLAY;" + "success;" + userHost + ";" + userInvited + ";" + joinedRoom.getId();
+        ServerRun.clientManager.sendToAClient(userHost, msg);
+        
+    }      
+      
+    private void onReceiveNotAcceptPlay(String received) {
+        String[] splitted = received.split(";");
+        String userHost = splitted[1];
+        String userInvited = splitted[2];
+        String roomId = splitted[3];
+        
+        // userHost out room
+        ServerRun.clientManager.find(userHost).setJoinedRoom(null);
+        // Delete competitor of userhost
+        ServerRun.clientManager.find(userHost).setcCompetitor(null);
+        
+        // delete room
+        Room room = ServerRun.roomManager.find(roomId);
+        ServerRun.roomManager.remove(room);
+        
+        // send result
+        String msg = "NOT_ACCEPT_PLAY;" + "success;" + userHost + ";" + userInvited + ";" + room.getId();
+        ServerRun.clientManager.sendToAClient(userHost, msg);
+    }      
+    
+    private void onReceiveLeaveGame(String received) throws SQLException {
+        String[] splitted = received.split(";");
+        String user1 = splitted[1];
+        String user2 = splitted[2];
+        String roomId = splitted[3];
+        
+        joinedRoom.userLeaveGame(user1);
+        
+        this.cCompetitor = null;
+        this.joinedRoom = null;
+        
+        // delete room
+        Room room = ServerRun.roomManager.find(roomId);
+        ServerRun.roomManager.remove(room);
+        
+        // userHost out room
+        Client c = ServerRun.clientManager.find(user2);
+        c.setJoinedRoom(null);
+        // Delete competitor of userhost
+        c.setcCompetitor(null);
+        
+        // send result
+        String msg = "LEAVE_TO_GAME;" + "success;" + user1 + ";" + user2;
+        ServerRun.clientManager.sendToAClient(user2, msg);
+    }      
+    
+    private void onReceiveStartGame(String received) {
+        String[] splitted = received.split(";");
+        String user1 = splitted[1];
+        String user2 = splitted[2];
+        String roomId = splitted[3];
+        ArrayList<Card> deck = new ArrayList<>();
+        String[] values = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+        String[] types = {"C", "D", "H", "S"}; // Clubs, Diamonds, Hearts, Spades
+        
+        String msg = "" ; 
+        for (String type : types) {
+            for (String value : values) {
+                Card card = new Card(value, type);
+                deck.add(card) ; 
+            }
+        }
+        
+        for (int i = 0; i < deck.size(); i++) {
+            int j = random.nextInt(deck.size());
+            Card currCard = deck.get(i);
+            Card randomCard = deck.get(j);
+            deck.set(i, randomCard);
+            deck.set(j, currCard);
+        }
+        
+        for(int i = 0 ; i < 12 ; i++){
+            msg = msg + deck.get(i).toString() + " "; 
+        }
+        
+        msg = msg.substring(0, msg.length() - 1) ;
+        String data = "START_GAME;success;" + roomId + ";" + msg ;
+        // Send question here
+        joinedRoom.resetRoom();
+        joinedRoom.broadcast(data);
+        joinedRoom.startGame();
+    } 
+        
+       private void onReceiveSubmitResult(String received) throws SQLException {
+        String[] splitted = received.split(";");
+        String user1 = splitted[1];
+        String user2 = splitted[2];
+        String roomId = splitted[3];
+        
+        if (user1.equals(joinedRoom.getClient1().getLoginUser())) {
+            joinedRoom.setResultClient1(received);
+        } else if (user1.equals(joinedRoom.getClient2().getLoginUser())) {
+            joinedRoom.setResultClient2(received);
+        }
+        
+        while (!joinedRoom.getTime().equals("00:00") && joinedRoom.getTime() != null) {
+            System.out.println(joinedRoom.getTime());
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } 
+        
+        String data = "RESULT_GAME;success;" + joinedRoom.handleResultClient() 
+                + ";" + joinedRoom.getClient1().getLoginUser() + ";" + joinedRoom.getClient2().getLoginUser() + ";" + joinedRoom.getId();
+        System.out.println(data);
+        joinedRoom.broadcast(data);
+    } 
+    
+    private void onReceiveAskPlayAgain(String received) throws SQLException {
+        String[] splitted = received.split(";");
+        String reply = splitted[1];
+        String user1 = splitted[2];
+        
+        System.out.println("client1: " + joinedRoom.getClient1().getLoginUser());
+        System.out.println("client2: " + joinedRoom.getClient2().getLoginUser());
+        
+        if (user1.equals(joinedRoom.getClient1().getLoginUser())) {
+            joinedRoom.setPlayAgainC1(reply);
+        } else if (user1.equals(joinedRoom.getClient2().getLoginUser())) {
+            joinedRoom.setPlayAgainC2(reply);
+        }
+        
+        while (!joinedRoom.getWaitingTime().equals("00:00")) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } 
+        
+        String result = this.joinedRoom.handlePlayAgain();
+        if (result.equals("YES")) {
+            joinedRoom.broadcast("ASK_PLAY_AGAIN;YES;" + joinedRoom.getClient1().loginUser + ";" + joinedRoom.getClient2().loginUser);
+        } else if (result.equals("NO")) {
+            joinedRoom.broadcast("ASK_PLAY_AGAIN;NO;");
+            
+            Room room = ServerRun.roomManager.find(joinedRoom.getId());
+            // delete room            
+            ServerRun.roomManager.remove(room);
+            this.joinedRoom = null;
+            this.cCompetitor = null;
+        } else if (result == null) {
+            System.out.println("da co loi xay ra huhu");
+        }
+    }
+    
+    private void onReceiveCardFlipped(String received){
+        String[] splitted = received.split(";");
+        String user = splitted[1];
+        String cardIndex = splitted[2];
+        String point = splitted[3] ; 
+        String msg = "CARD_FLIPPED" + ";" + cardIndex  + ";" + point; 
+        ServerRun.clientManager.sendToAClient(user, msg);
     }
 
     // Get set

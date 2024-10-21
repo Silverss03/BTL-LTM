@@ -8,11 +8,12 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import service.Client;
 import service.ClientManager;
+import service.RoomManager;
 
 public class ServerRun {
 
     public static volatile ClientManager clientManager;
-//    public static volatile RoomManager roomManager;
+    public static volatile RoomManager roomManager;
     public static boolean isShutDown = false;
     public static ServerSocket ss;
 
@@ -26,7 +27,7 @@ public class ServerRun {
             
             // init managers
             clientManager = new ClientManager();
-//            roomManager = new RoomManager();
+            roomManager = new RoomManager();
 
             // create threadpool
             ThreadPoolExecutor executor = new ThreadPoolExecutor(
