@@ -32,6 +32,7 @@ public class Client implements Runnable {
     String loginUser;
     Client cCompetitor;
     float score = 0;
+    int player_finished = 0 ; 
 
     Room joinedRoom;
 
@@ -120,6 +121,8 @@ public class Client implements Runnable {
                     case "CARD_FLIPPED":
                         onReceiveCardFlipped(received) ; 
                         break ;
+                    case "PLAYER_FINISHED":
+                        onReceivePlayerFinished(received) ; 
                         
                     case "EXIT":
                         running = false;
@@ -415,26 +418,18 @@ public class Client implements Runnable {
         joinedRoom.startGame();
     } 
         
-       private void onReceiveSubmitResult(String received) throws SQLException {
+    private void onReceiveSubmitResult(String received) throws SQLException {
         String[] splitted = received.split(";");
         String user1 = splitted[1];
         String user2 = splitted[2];
         String roomId = splitted[3];
+        String player1_score = splitted[4] ; 
         
         if (user1.equals(joinedRoom.getClient1().getLoginUser())) {
-            joinedRoom.setResultClient1(received);
+            joinedRoom.setResultClient1(player1_score);
         } else if (user1.equals(joinedRoom.getClient2().getLoginUser())) {
-            joinedRoom.setResultClient2(received);
+            joinedRoom.setResultClient2(player1_score);
         }
-        
-        while (!joinedRoom.getTime().equals("00:00") && joinedRoom.getTime() != null) {
-            System.out.println(joinedRoom.getTime());
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Client.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } 
         
         String data = "RESULT_GAME;success;" + joinedRoom.handleResultClient() 
                 + ";" + joinedRoom.getClient1().getLoginUser() + ";" + joinedRoom.getClient2().getLoginUser() + ";" + joinedRoom.getId();
@@ -530,5 +525,10 @@ public class Client implements Runnable {
 
     public void setJoinedRoom(Room joinedRoom) {
         this.joinedRoom = joinedRoom;
+    }
+
+    private void onReceivePlayerFinished(String received) {
+        player_finished += 1 ; 
+        
     }
 }

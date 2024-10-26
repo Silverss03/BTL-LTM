@@ -235,9 +235,9 @@ public class SocketHandler {
         sendData("START_GAME;" + loginUser + ";" + userInvited + ";" + roomIdPresent);
     }
     
-    public void submitResult (String competitor) { 
-//        sendData("SUBMIT_RESULT;" + loginUser + ";" + competitor + ";" + roomIdPresent + ";" + data);
-//        ClientRun.gameView.afterSubmit();
+    public void submitResult (String competitor, int score) { 
+        sendData("SUBMIT_RESULT;" + loginUser + ";" + competitor + ";" + roomIdPresent + ";" + score);
+        ClientRun.gameView.afterSubmit();
     }
     
     public void acceptPlayAgain() {
@@ -587,16 +587,16 @@ public class SocketHandler {
         String user2 = splitted[4];
         String roomId = splitted[5];
         
-//        if (status.equals("success")) {
-//            ClientRun.gameView.setWaitingRoom();
-//            if (result.equals("DRAW")) {
-//                ClientRun.gameView.showAskPlayAgain("The game is draw. Do you want to play continue?");
-//            } else if (result.equals(loginUser)) {
-//                ClientRun.gameView.showAskPlayAgain("You win. Do you want to play continue?");
-//            } else {
-//                ClientRun.gameView.showAskPlayAgain("You lose. Do you want to play continue?");
-//            }
-//        }
+        if (status.equals("success")) {
+            ClientRun.gameView.setWaitingRoom();
+            if (result.equals("DRAW")) {
+                ClientRun.gameView.showAskPlayAgain("Trận đấu hòa. Bạn có muốn tiếp tục?");
+            } else if (result.equals(loginUser)) {
+                ClientRun.gameView.showAskPlayAgain("Trận đấu thắng. Bạn có muốn tiếp tục?");
+            } else {
+                ClientRun.gameView.showAskPlayAgain("Trận đấu thua. Bạn có muốn tiếp tục?");
+            }
+        }
     }
     
     private void onReceiveAskPlayAgain(String received) {

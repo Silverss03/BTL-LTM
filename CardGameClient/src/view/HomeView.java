@@ -318,7 +318,7 @@ public class HomeView extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(HomeView.this, "You haven't chosen anyone yet! Please select one user.", "ERROR", JOptionPane.ERROR_MESSAGE);
         } else {
             String userSelected = String.valueOf(tblUser.getValueAt(row, 0));
-            System.out.println(userSelected);
+            System.out.println("user selected " + userSelected);
             if (userSelected.equals(ClientRun.socketHandler.getLoginUser())) {
                 JOptionPane.showMessageDialog(HomeView.this, "You can not see yourself.", "ERROR", JOptionPane.ERROR_MESSAGE);
             } else {

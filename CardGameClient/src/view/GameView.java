@@ -9,6 +9,9 @@ import model.Card;
 import run.ClientRun ; 
 import helper.* ; 
 import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import javax.swing.table.DefaultTableModel;
 
 public class GameView extends javax.swing.JFrame {
@@ -19,6 +22,7 @@ public class GameView extends javax.swing.JFrame {
     ArrayList<Card> hiddenCard;
     ArrayList<Boolean> cardFlipped;  // To track if each card is flipped
     Boolean yourTurn = false ;
+    ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     
     int cardWidth = 100;
     int cardHeight = 154;
@@ -26,13 +30,16 @@ public class GameView extends javax.swing.JFrame {
     int player1Score = 0 ; 
     int player2Score = 0 ;
     int maxCards = 3 ; 
+    int opponentCards = 3 ; 
 
     JButton hitButton = new JButton("Rút");
     JButton stayButton = new JButton("Bỏ");
+    JButton yesButton = new JButton("Có") ;
+    JButton noButton = new JButton("Không") ;
     JButton btnStart = new JButton("Chơi") ;
     JLabel lbWaiting = new JLabel("Đợi chủ phòng bắt đầu....");
-    //JPanel panelPlayAgain = new JPanel() ; 
-   // JLabel lbResult = new JLabel("Do you want to play again?")  ;
+    JPanel panelPlayAgain = new JPanel() ; 
+    JLabel lbResult = new JLabel("Bạn muốn chơi lại không?")  ;
     JLabel infoPlayer = new JLabel("Đang chơi game cùng:") ;
     JLabel lbWaitingTimer = new JLabel();
     JPanel player1Panel = new JPanel();
@@ -130,6 +137,15 @@ public class GameView extends javax.swing.JFrame {
         startPanel.setBounds(350, 200, 300, 150);
         add(startPanel) ;
         
+        lbResult.setBounds(450, 10, 300, 100);
+        panelPlayAgain.setBounds(500, 400, 300, 100);
+        panelPlayAgain.add(lbWaitingTimer) ;
+        panelPlayAgain.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        panelPlayAgain.add(yesButton) ; 
+        panelPlayAgain.add(noButton) ;
+        add(lbResult ) ; 
+        add(panelPlayAgain) ; 
+        
         gamePanel.setLayout(null);
         gamePanel.setBackground(new Color(53, 101, 77));
         add(gamePanel, BorderLayout.CENTER) ;
@@ -205,6 +221,8 @@ public class GameView extends javax.swing.JFrame {
             hitButton.setEnabled(false);
             stayButton.setEnabled(false);
         });
+        
+
     }
     public void setDeck(String deck) {
         String[] splitted = deck.split(" ") ;
@@ -219,24 +237,29 @@ public class GameView extends javax.swing.JFrame {
         }
     }
     
-//    public void setWaitingRoom () {
-//        gamePanel.setVisible(false);
-//        btnStart.setVisible(false);
-//        lbWaiting.setText("waiting competitor...");
-//        waitingReplyClient();
-//    }
+    public void setWaitingRoom () {
+        gamePanel.setVisible(false);
+        btnStart.setVisible(false);
+        lbWaiting.setText("Đợi người chơi khác...");
+        waitingReplyClient();
+    }
     
-//    public void showAskPlayAgain (String msg) {
-//        panelPlayAgain.setVisible(true);
-//        lbResult.setText(msg);
-//    }
-//    
-//    public void hideAskPlayAgain () {
-//        panelPlayAgain.setVisible(false);
-//    }
+    public void showAskPlayAgain (String msg) {
+        panelPlayAgain.setVisible(true);
+        player1Panel.setVisible(false);
+        player2Panel.setVisible(false);
+        lbResult.setText(msg);
+        lbResult.setVisible(true);
+    }
+    
+    public void hideAskPlayAgain () {
+        panelPlayAgain.setVisible(false);
+    }
     
     public void setInfoPlayer (String username) {
         competitor = username;
+        lbResult.setVisible(false);
+        panelPlayAgain.setVisible(false);
         player2NameLabel.setText(username);
         infoPlayer.setText("Đang chơi game cùng " + username);
     }
@@ -245,6 +268,8 @@ public class GameView extends javax.swing.JFrame {
         answer = false;
         btnStart.setVisible(true);
         lbWaiting.setVisible(false);
+        lbResult.setVisible(false);
+        panelPlayAgain.setVisible(false) ;
         yourTurn = true ; 
         playerTurn.setText("Lượt của bạn, hãy rút bài!");
     }
@@ -258,28 +283,31 @@ public class GameView extends javax.swing.JFrame {
     public void setStartGame () {
         answer = false;
         maxCards = 3 ; 
+        opponentCards = 3 ; 
         player1Score = 0 ; 
         player2Score = 0 ;
         startPanel.setVisible(false);
+        lbResult.setVisible(false);
+        panelPlayAgain.setVisible(false);
         gamePanel.setVisible(true);
         player1Panel.setVisible(true);
         player2Panel.setVisible(true);
     }
     
-//    public void waitingReplyClient () {
-//        waitingClientTimer = new CountDownTimer(10);
-//        waitingClientTimer.setTimerCallBack(
-//                null,
-//                (Callable) () -> {
-//                    lbWaitingTimer.setText("" + CustomDateTimeFormatter.secondsToMinutes(waitingClientTimer.getCurrentTick()));
-//                    if (lbWaitingTimer.getText().equals("00:00") && answer == false) {
-//                        hideAskPlayAgain();
-//                    }
-//                    return null;
-//                },
-//                1
-//        );
-//    }
+    public void waitingReplyClient () {
+        waitingClientTimer = new CountDownTimer(10);
+        waitingClientTimer.setTimerCallBack(
+                null,
+                (Callable) () -> {
+                    lbWaitingTimer.setText("" + CustomDateTimeFormatter.secondsToMinutes(waitingClientTimer.getCurrentTick()));
+                    if (lbWaitingTimer.getText().equals("00:00") && answer == false) {
+                        hideAskPlayAgain();
+                    }
+                    return null;
+                },
+                1
+        );
+    }
     
     public void showMessage(String msg){
         JOptionPane.showMessageDialog(this, msg);
@@ -309,16 +337,41 @@ public class GameView extends javax.swing.JFrame {
             ClientRun.socketHandler.cardFlipped(competitor, selectedCardIndex, score) ; 
             selectedCardIndex = -1;  // Reset selection
             maxCards = maxCards - 1; 
+            if(opponentCards == 0 ){
+                // Schedule a task to run after 2 seconds
+                scheduler.schedule(() -> {
+                    ClientRun.socketHandler.submitResult(competitor, player1Score);
+                    // After the task, shut down the scheduler
+                    scheduler.shutdown();
+                }, 2, TimeUnit.SECONDS);
+            }
         }
     }
     
     public void flipCard(int cardIndex, int point){
         cardFlipped.set(cardIndex, true);  // Mark the card as flipped
+        opponentCards -= 1 ;
         player2Score += point ; 
         player2ScoreLabel.setText("Điểm " + player2Score);
         yourTurn = true ; 
         playerTurn.setText("Lượt của bạn, hãy rút bài!");
         gamePanel.repaint() ;
+        if(maxCards == 0){
+            scheduler.schedule(() -> {
+                ClientRun.socketHandler.submitResult(competitor, player1Score);
+                // After the task, shut down the scheduler
+                scheduler.shutdown();
+            }, 2, TimeUnit.SECONDS);
+        } 
+    }
+    
+    public void afterSubmit() {
+        gamePanel.setVisible(false);
+        lbWaiting.setVisible(true);
+        player1Panel.setVisible(false);
+        player2Panel.setVisible(false);
+        lbWaiting.setText("Waiting result from server...");
+        
     }
 } 
 
