@@ -91,11 +91,9 @@ public class Room {
             int pointClient2 = Integer.parseInt(resultClient2);
             
             if (pointClient1 > pointClient2) {
-                System.out.println("client1 win neg diff");
                 client1Win();
                 return client1.getLoginUser();
             } else if (pointClient1 < pointClient2) {
-                System.out.println("client2 win neg diff");
                 client2Win();
                 return client2.getLoginUser();
             } else {
@@ -169,12 +167,8 @@ public class Room {
         } else if (playAgainC1.equals("YES") && playAgainC2.equals("YES")) {
             return "YES";
         } else if (playAgainC1.equals("NO") && playAgainC2.equals("YES")) {
-//            ServerRun.clientManager.sendToAClient(client2.getLoginUser(), "ASK_PLAY_AGAIN;NO");
-//            deleteRoom();
             return "NO";
         } else if (playAgainC2.equals("NO") && playAgainC2.equals("YES")) {
-//            ServerRun.clientManager.sendToAClient(client1.getLoginUser(), "ASK_PLAY_AGAIN;NO");
-//            deleteRoom();
             return "NO";
         } else {
             return "NO";

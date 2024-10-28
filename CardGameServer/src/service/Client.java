@@ -156,7 +156,6 @@ public class Client implements Runnable {
     public String sendData(String data) {
         try {
             this.dos.writeUTF(data);
-            System.out.println("Server: " + data);
             return "success";
         } catch (IOException e) {
             System.err.println("Send data failed!");
@@ -434,6 +433,7 @@ public class Client implements Runnable {
         String data = "RESULT_GAME;success;" + joinedRoom.handleResultClient() 
                 + ";" + joinedRoom.getClient1().getLoginUser() + ";" + joinedRoom.getClient2().getLoginUser() + ";" + joinedRoom.getId();
         System.out.println(data);
+        joinedRoom.waitingClientTimer();
         joinedRoom.broadcast(data);
     } 
     

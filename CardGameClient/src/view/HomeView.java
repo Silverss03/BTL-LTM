@@ -82,7 +82,7 @@ public class HomeView extends javax.swing.JFrame {
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("LUCKY CARDS");
         jPanel1.add(jLabel2);
-        jLabel2.setBounds(80, 10, 432, 85);
+        jLabel2.setBounds(80, 10, 450, 85);
 
         btnCreateRoom.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         btnCreateRoom.setText("Chơi");
@@ -137,7 +137,7 @@ public class HomeView extends javax.swing.JFrame {
         jScrollPane.setViewportView(tblUser);
 
         jPanel1.add(jScrollPane);
-        jScrollPane.setBounds(600, 120, 200, 440);
+        jScrollPane.setBounds(600, 120, 210, 440);
 
         btnRefresh.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
         btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/refresh.png"))); // NOI18N
@@ -168,7 +168,7 @@ public class HomeView extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lbUsername)
                     .addComponent(lbScore))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -186,7 +186,7 @@ public class HomeView extends javax.swing.JFrame {
         );
 
         jPanel1.add(jPanel3);
-        jPanel3.setBounds(600, 0, 200, 100);
+        jPanel3.setBounds(600, 0, 220, 100);
 
         btnMessage.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
         btnMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/chat.png"))); // NOI18N
@@ -239,7 +239,7 @@ public class HomeView extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 20, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

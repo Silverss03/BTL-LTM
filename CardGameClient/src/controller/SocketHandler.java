@@ -507,8 +507,6 @@ public class SocketHandler {
             String userWin = splitted[4];
             String userDraw = splitted[5];
             String userLose = splitted[6];
-//                String userAvgCompetitor =  splitted[7];
-//                String userAvgTime =  splitted[8];
             String userStatus = splitted[7];
 
             ClientRun.openScene(ClientRun.SceneName.INFOPLAYER);
@@ -604,16 +602,15 @@ public class SocketHandler {
         String[] splitted = received.split(";");
         String status = splitted[1];
         
-//        if (status.equals("NO")) {
-//            ClientRun.closeScene(ClientRun.SceneName.GAMEVIEW);
-//            JOptionPane.showMessageDialog(ClientRun.homeView, "End Game!");
-//        } else {
-//            if (loginUser.equals(splitted[2])) {
-//                ClientRun.gameView.setStateHostRoom();
-//            } else {
-//                ClientRun.gameView.setStateUserInvited();
-//            }
-//        }
+        if (status.equals("NO")) {
+            ClientRun.closeScene(ClientRun.SceneName.GAMEVIEW);
+        } else {
+            if (loginUser.equals(splitted[2])) {
+                ClientRun.gameView.setStateHostRoom();
+            } else {
+                ClientRun.gameView.setStateUserInvited();
+            }
+        }
     }  
 
     // get set

@@ -85,14 +85,6 @@ public class GameView extends javax.swing.JFrame {
     
     public GameView() {
         setupFrame() ; 
-//        frame.add(panelPlayAgain) ; 
-//        frame.add(lbResult) ;
-//        frame.add(infoLayer) ; 
-//        frame.add(lbWaitingTimer) ; 
-//
-//        //panelPlayAgain.setBorder(javax.swing.BorderFactory.createTitledBorder("Question?"));
-//        
-//        gamePanel.repaint();
         player2Panel.setVisible(false);
         gamePanel.setVisible(false);
         player1Panel.setVisible(false);
@@ -122,6 +114,9 @@ public class GameView extends javax.swing.JFrame {
         });
          
         startPanel.setLayout(new BoxLayout(startPanel, BoxLayout.Y_AXIS));
+        startPanel.setBounds(350, 200, 300, 200);
+        startPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        startPanel.setBackground(new Color(240, 240, 240));
         
         // Add spacing and alignment for the components (optional, for better layout control)
         infoPlayer.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -129,19 +124,37 @@ public class GameView extends javax.swing.JFrame {
         btnStart.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Add components to the panel in the desired order
+        infoPlayer.setFont(new Font("SansSerif", Font.BOLD, 16));
         startPanel.add(infoPlayer);  // Top
         startPanel.add(Box.createVerticalStrut(10)); // Optional spacing between components
+        lbWaiting.setFont(new Font("SansSerif", Font.ITALIC, 14)); 
         startPanel.add(lbWaiting);  // Middle
         startPanel.add(Box.createVerticalStrut(10)); // Optional spacing
+        btnStart.setFont(new Font("SansSerif", Font.PLAIN, 14)); // Change font and size
+        btnStart.setBackground(new Color(50, 150, 250)); // Button background color
+        btnStart.setForeground(Color.WHITE); // Button text color
+        btnStart.setAlignmentX(Component.CENTER_ALIGNMENT);
         startPanel.add(btnStart);  // Bottom
         startPanel.setBounds(350, 200, 300, 150);
         add(startPanel) ;
         
-        lbResult.setBounds(450, 10, 300, 100);
+        lbResult.setFont(new Font("SansSerif", Font.BOLD, 18)); // Larger font for prominence
+        lbResult.setForeground(new Color(60, 60, 60)); // Custom color for better readability
+        lbResult.setHorizontalAlignment(SwingConstants.CENTER);
+        lbResult.setBounds(250, 10, 500, 100);
         panelPlayAgain.setBounds(500, 400, 300, 100);
+        lbWaitingTimer.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        lbWaitingTimer.setAlignmentX(Component.CENTER_ALIGNMENT);
         panelPlayAgain.add(lbWaitingTimer) ;
         panelPlayAgain.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        panelPlayAgain.setBackground(new Color(245, 245, 245)); // Light background color
+        yesButton.setFont(new Font("SansSerif", Font.BOLD, 14));
+        yesButton.setBackground(new Color(76, 175, 80)); // Green for positive action
+        yesButton.setForeground(Color.WHITE);
         panelPlayAgain.add(yesButton) ; 
+        noButton.setFont(new Font("SansSerif", Font.BOLD, 14));
+        noButton.setBackground(new Color(244, 67, 54)); // Red for negative action
+        noButton.setForeground(Color.WHITE);
         panelPlayAgain.add(noButton) ;
         add(lbResult ) ; 
         add(panelPlayAgain) ; 
@@ -212,8 +225,23 @@ public class GameView extends javax.swing.JFrame {
         });
 
         hitButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 hitButtonActionPerformed(evt);
+            }
+        });
+        
+        yesButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                yesButtonActionPerformed(evt ); 
+            }
+        });
+        
+        noButton.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                noButtonActionPerformed(evt) ; 
             }
         });
 
@@ -266,6 +294,7 @@ public class GameView extends javax.swing.JFrame {
     
     public void setStateHostRoom () {
         answer = false;
+        startPanel.setVisible(true);
         btnStart.setVisible(true);
         lbWaiting.setVisible(false);
         lbResult.setVisible(false);
@@ -276,11 +305,15 @@ public class GameView extends javax.swing.JFrame {
     
     public void setStateUserInvited () {
         answer = false;
+        startPanel.setVisible(true);
         btnStart.setVisible(false);
         lbWaiting.setVisible(true);
+        lbResult.setVisible(false);
+        panelPlayAgain.setVisible(false) ;
     }
      
     public void setStartGame () {
+        scheduler = Executors.newScheduledThreadPool(1);
         answer = false;
         maxCards = 3 ; 
         opponentCards = 3 ; 
@@ -346,6 +379,18 @@ public class GameView extends javax.swing.JFrame {
                 }, 2, TimeUnit.SECONDS);
             }
         }
+    }
+    
+    public void yesButtonActionPerformed(java.awt.event.ActionEvent evt){
+        ClientRun.socketHandler.acceptPlayAgain();
+        answer = true ; 
+        hideAskPlayAgain() ;
+    }
+    
+    public void noButtonActionPerformed(java.awt.event.ActionEvent evt){
+        ClientRun.socketHandler.notAcceptPlayAgain();
+        answer = true ; 
+        hideAskPlayAgain() ;
     }
     
     public void flipCard(int cardIndex, int point){

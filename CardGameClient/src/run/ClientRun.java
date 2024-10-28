@@ -129,6 +129,9 @@ public class ClientRun {
                 case RANKWINVIEW:
                     if (rankWinView != null) rankWinView.dispose();
                     break;
+                case GAMEVIEW:
+                    gameView.dispose();
+                    break;
                 default:
                     break;
             }
