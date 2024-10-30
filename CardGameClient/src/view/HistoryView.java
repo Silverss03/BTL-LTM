@@ -1,155 +1,194 @@
 package view;
 
 import javax.swing.*;
-import java.awt.*;
-import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.imageio.ImageIO;
+import java.io.IOException;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
-import run.ClientRun;
 
 public class HistoryView extends JFrame {
-
-    private JTable rankTable;
+    private JTable historyTable;
     private DefaultTableModel tableModel;
+    private BackgroundPanel backgroundPanel;
 
     public HistoryView() {
-        setupFrame();  // Cấu hình JFrame
-        initTable();   // Khởi tạo bảng xếp hạng
+        setupFrame();
+        initTable();
+        setLocationRelativeTo(null); // Căn giữa màn hình
     }
 
-    // Cấu hình các thuộc tính của JFrame
     private void setupFrame() {
-        setTitle("Bảng Xếp Hạng");
-
-        // Thiết lập full màn hình và căn giữa cửa sổ
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setLayout(new BorderLayout());
-
-        // Đặt màu nền của JFrame là màu trắng
-        getContentPane().setBackground(Color.WHITE);
-
-        // Tạo panel chứa nút và tiêu đề
+        setTitle("Lịch Sử Chơi Game");
+        setSize(1100, 600);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        
+        backgroundPanel = new BackgroundPanel();
+        backgroundPanel.setLayout(new BorderLayout());
+        setContentPane(backgroundPanel);
+        
         JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setBackground(Color.WHITE);  // Nền trắng cho panel
-        topPanel.setBorder(new EmptyBorder(10, 10, 10, 10));  // Cách các cạnh 10px
+    topPanel.setOpaque(false);
+    topPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        // Tạo nút Home
+    JLabel titleLabel = new JLabel("Lịch sử người chơi", SwingConstants.CENTER);
+    titleLabel.setFont(new Font("Tahoma", Font.BOLD, 24));
+    titleLabel.setForeground(Color.decode("#3d6a9f"));
+    titleLabel.setBorder(new EmptyBorder(10, 0, 10, 0));
+
+    topPanel.add(titleLabel, BorderLayout.CENTER);
+    backgroundPanel.add(topPanel, BorderLayout.NORTH);
+
+        // Tạo panel cho nút
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        buttonPanel.setOpaque(false);
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 40, 0)); // Tăng cách bottom lên 40px
+
         JButton homeButton = new JButton("Home");
-        homeButton.setFont(new Font("Arial", Font.BOLD, 14));
-        homeButton.setBackground(Color.decode("#3d6a9f"));  // Nền màu xanh #3d6a9f
-        homeButton.setForeground(Color.WHITE);  // Chữ trắng
-        homeButton.setFocusPainted(false);  // Bỏ viền khi chọn
-        homeButton.setBorderPainted(false);  // Bỏ viền nút
-        homeButton.addActionListener(e -> dispose());  // Đóng cửa sổ
-
-        // Tạo nút BXH theo trận thắng
-        JButton winRankingButton = new JButton("Xếp hạng theo điểm");
-        winRankingButton.setFont(new Font("Arial", Font.BOLD, 14));
-        winRankingButton.setBackground(Color.decode("#3d6a9f"));  // Nền màu xanh #3d6a9f
-        winRankingButton.setForeground(Color.WHITE);  // Chữ trắng
-        winRankingButton.setFocusPainted(false);  // Bỏ viền khi chọn
-        winRankingButton.setBorderPainted(false);  // Bỏ viền nút
-        winRankingButton.addActionListener(e -> {
-            ClientRun.socketHandler.getRank();
-            dispose();
+        homeButton.setFont(new Font("Tahoma", Font.BOLD, 14));
+        homeButton.setBackground(Color.decode("#3d6a9f"));
+        homeButton.setForeground(Color.WHITE);
+        homeButton.setFocusPainted(false);
+        homeButton.setBorderPainted(false);
+        homeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+            }
         });
 
-        // Panel chứa các nút, đặt ở trên cùng
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        buttonPanel.setBackground(Color.WHITE);  // Nền trắng cho panel
-        buttonPanel.add(homeButton);
-        buttonPanel.add(winRankingButton);  // Thêm nút BXH vào panel
-
-        // Thêm buttonPanel vào topPanel
-        topPanel.add(buttonPanel, BorderLayout.NORTH);
-
-        // Thêm tiêu đề cho bảng xếp hạng
-        JLabel titleLabel = new JLabel("Bảng Xếp Hạng Người Chơi", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        titleLabel.setForeground(Color.decode("#3d6a9f"));
-        titleLabel.setBorder(new EmptyBorder(10, 0, 10, 0)); 
-
-        // Thêm tiêu đề vào topPanel
-        topPanel.add(titleLabel, BorderLayout.CENTER);
-
-        // Thêm topPanel vào JFrame
-        add(topPanel, BorderLayout.NORTH);
+        buttonPanel.add(homeButton); // Thêm nút vào buttonPanel
+        backgroundPanel.add(buttonPanel, BorderLayout.SOUTH); // Đặt buttonPanel ở dưới cùng
     }
 
-    // Khởi tạo bảng và JScrollPane để hiển thị dữ liệu
     private void initTable() {
-        String[] columnNames = {"Xếp hạng", "Tên Người Chơi", "Điểm", "Thắng", "Hòa", "Thua"};
+        String[] columnNames = {"Đối thủ", "Thời gian", "Kết quả"};
 
         tableModel = new DefaultTableModel(columnNames, 0);
-        rankTable = new JTable(tableModel) {
+        historyTable = new JTable(tableModel) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false;  // Không cho phép chỉnh sửa ô
+                return false; // Không cho phép chỉnh sửa
             }
         };
 
-        rankTable.setRowHeight(25);
-        rankTable.setFont(new Font("Arial", Font.PLAIN, 12));
-        rankTable.setBackground(Color.WHITE);
-        rankTable.setGridColor(Color.LIGHT_GRAY);
-        rankTable.setBorder(new LineBorder(Color.DARK_GRAY, 1));
+        historyTable.setBackground(new Color(255, 255, 255, 76));
+        historyTable.setOpaque(false);
+        historyTable.setRowHeight(25);
+        historyTable.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        historyTable.setGridColor(new Color(0, 0, 0, 0));
 
-        rankTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        rankTable.getTableHeader().setBackground(Color.decode("#3d6a9f"));
-        rankTable.getTableHeader().setForeground(Color.WHITE);
-
-        rankTable.setShowVerticalLines(false);
-        rankTable.setShowHorizontalLines(false);
-        rankTable.setIntercellSpacing(new Dimension(0, 0));
+        historyTable.getTableHeader().setFont(new Font("Tahoma", Font.BOLD, 14));
+        historyTable.getTableHeader().setBackground(historyTable.getBackground());
+        historyTable.getTableHeader().setForeground(Color.BLACK);
 
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
-        for (int i = 0; i < rankTable.getColumnCount(); i++) {
-            rankTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        for (int i = 0; i < historyTable.getColumnCount(); i++) {
+            historyTable.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
         }
 
-        rankTable.getColumnModel().getColumn(0).setPreferredWidth(50);
-        rankTable.getColumnModel().getColumn(1).setPreferredWidth(150);
-        rankTable.getColumnModel().getColumn(2).setPreferredWidth(100);
-        rankTable.getColumnModel().getColumn(3).setPreferredWidth(80);
-        rankTable.getColumnModel().getColumn(4).setPreferredWidth(80);
-        rankTable.getColumnModel().getColumn(5).setPreferredWidth(80);
+        // Tạo tiêu đề cho bảng
+        JLabel titleLabel = new JLabel("Lịch Sử Chơi Game", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Tahoma", Font.BOLD, 18));
+        titleLabel.setForeground(Color.WHITE); // Màu chữ tiêu đề
+        titleLabel.setOpaque(false); // Để tiêu đề trong suốt
 
-        JScrollPane scrollPane = new JScrollPane(rankTable);
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        scrollPane.getViewport().setBackground(Color.WHITE);
-         
+        // Panel bao quanh bảng
         JPanel tablePanel = new JPanel(new BorderLayout());
-        tablePanel.setBackground(Color.WHITE);
-        tablePanel.setPreferredSize(new Dimension((int) (Toolkit.getDefaultToolkit().getScreenSize().width * 0.8), 600));
-        tablePanel.add(scrollPane, BorderLayout.CENTER);
+        tablePanel.setOpaque(false);
+        tablePanel.add(titleLabel, BorderLayout.NORTH); // Đặt tiêu đề ở trên cùng
+        tablePanel.add(historyTable.getTableHeader(), BorderLayout.NORTH);
+        tablePanel.add(historyTable, BorderLayout.CENTER);
 
-        JPanel centerPanel = new JPanel(new GridBagLayout());
-        centerPanel.setBackground(Color.WHITE);
+        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        centerPanel.setOpaque(false);
         centerPanel.add(tablePanel);
-        add(centerPanel, BorderLayout.CENTER);
+
+        backgroundPanel.add(centerPanel, BorderLayout.CENTER); // Thêm bảng vào BackgroundPanel
     }
 
-    public void updateRankDisplay(String rankData) {
-        tableModel.setRowCount(0);
+    public void updateHistoryDisplay(String history) {
+        tableModel.setRowCount(0); // Xóa dữ liệu cũ
 
-        String[] data = rankData.split(";");
-        for (int i = 0; i < data.length; i++) {
-            String[] userData = data[i].split(":");
-            if (userData.length >= 5) {
-                Object[] row = {
-                    i, 
-                    userData[0],
-                    Float.parseFloat(userData[1]),
-                    Integer.parseInt(userData[2]),
-                    Integer.parseInt(userData[3]),
-                    Integer.parseInt(userData[4])
-                };
-                tableModel.addRow(row);
+        String[] lines = history.split("\n");
+        for (String line : lines) {
+            line = line.trim();
+            if (line.isEmpty()) continue;
+            
+            String[] parts = line.split(": ");
+            if (parts.length == 2) {
+                String[] matchDetails = parts[0].replace("Match with ", "").split(" on ");
+                String opponent = matchDetails[0].trim();
+                String date = matchDetails.length > 1 ? matchDetails[1].trim() : "N/A";
+                String result = parts[1].trim();
+                
+                // Đảm bảo chỉ thêm kết quả là "thắng" hoặc "thua" vào cột resultMatch
+                if (result.equals("Thắng") || result.equals("Thua")) {
+                    tableModel.addRow(new Object[]{opponent, date, result});
+                }
             }
         }
+
+        // Cập nhật chiều cao của bảng dựa trên số lượng hàng
+        int rowCount = tableModel.getRowCount();
+        int tableHeight = rowCount * historyTable.getRowHeight();
+        historyTable.setPreferredSize(new Dimension(600, tableHeight)); // Chiều ngang bảng là 600px
+    }
+
+    public void onReceiveHistory(String received) {
+        StringBuilder historyDisplay = new StringBuilder();
+        String[] data = received.split(";");
+
+        if (data.length > 0 && data[0].equals("success")) {
+            for (int i = 1; i < data.length; i += 3) {
+                if (i + 2 < data.length) {
+                    String opponent = data[i];
+                    String date = data[i + 1];
+                    String result = data[i + 2];
+                    historyDisplay.append("Match with ").append(opponent)
+                                  .append(" on ").append(date).append(": ")
+                                  .append(result.equals("thắng") ? "Thắng" : "Thua").append("\n");
+                }
+            }
+        } else {
+            historyDisplay.append("No game history found for this user.");
+        }
+        updateHistoryDisplay(historyDisplay.toString());
+    }
+
+    private static class BackgroundPanel extends JPanel {
+        private Image backgroundImage;
+
+        public BackgroundPanel() {
+            try {
+                backgroundImage = ImageIO.read(getClass().getResourceAsStream("/assets/history.jpg"));
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("Không thể tải ảnh từ đường dẫn: " + "/assets/history.jpg");
+            }
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            if (backgroundImage != null) {
+                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            HistoryView historyView = new HistoryView();
+            historyView.setVisible(true);
+
+            // Test dữ liệu nhận về (giả lập)
+            String testData = "success;Opponent1;12/10/2024;thắng;Opponent2;15/10/2024;thua;Opponent3;18/10/2024;thắng";
+            historyView.onReceiveHistory(testData);
+        });
     }
 }

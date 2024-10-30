@@ -13,6 +13,7 @@ import javax.swing.JOptionPane;
 import run.ClientRun;
 import view.RankView;
 import view.RankWinView;
+import view.HistoryView;
 
 public class SocketHandler {
 
@@ -132,6 +133,9 @@ public class SocketHandler {
                     case "RANKWIN":
                         onReceiveRankWin(received);
                         break;
+                    case "HISTORY":
+                        onReceiveHistory(received);
+                        break;
                     case "CARD_FLIPPED" :
                         onReceivedCardFlipped(received) ; 
                         break ; 
@@ -184,6 +188,9 @@ public class SocketHandler {
 
     public void getRankWin() {
         sendData("RANKWIN");
+    }
+    public void getHistory(String username) {
+        sendData("HISTORY;" + username);
     }
 
     public void logout() {
@@ -427,6 +434,37 @@ public class SocketHandler {
             JOptionPane.showMessageDialog(ClientRun.loginView, "Đã có lỗi!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
+   private void onReceiveHistory(String received) {
+       System.out.println(received);
+    StringBuilder historyDisplay = new StringBuilder();
+
+    String[] data = received.split(";");
+
+    if (data.length > 0 && data[1].equals("success")) {
+        for (int i = 2; i < data.length; i += 3) { 
+            if (i + 2 < data.length) {
+                String opponent = data[i];       // Opponent's name
+                String date = data[i + 1];       // Match date
+                String result = data[i + 2];     // Result ("thắng" or "thua")
+
+                // Append formatted history
+                historyDisplay.append("Match with ").append(opponent)
+                              .append(" on ").append(date).append(": ")
+                              .append(result.equals("thang") ? "Thắng" : "Thua")
+                              .append("\n");
+            }
+        }
+    } else {
+        historyDisplay.append("No game history found for this user.");
+    }
+    
+    ClientRun.historyView = new HistoryView();
+    ClientRun.historyView.updateHistoryDisplay(historyDisplay.toString());
+    ClientRun.historyView.setVisible(true);
+}
+
+
+
 
     private void onReceiveRank(String received) {
         StringBuilder rankDisplay = new StringBuilder();

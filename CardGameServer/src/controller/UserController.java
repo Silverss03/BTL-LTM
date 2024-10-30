@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import connection.DatabaseConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import model.UserModel;
 
@@ -18,7 +20,7 @@ public class UserController {
     private final String GET_INFO_USER = "SELECT username, score, win, draw, lose FROM users WHERE username = ?";
     private final String UPDATE_USER = "UPDATE users SET score = ?, win = ?, draw = ?, lose = ? WHERE username = ?";
     private final String GET_NAME_AND_SCORE = "SELECT username, score FROM users WHERE username = ?";
-
+    private final String UPDATE_HISTORY = "INSERT INTO history (userName1, userName2, resultMatch) VALUES (?, ?, ?)" ;
     // Database connection instance
     private final Connection con;
 
@@ -94,6 +96,20 @@ public class UserController {
         }
         return null;
     }
+    
+    public void updateHistory(String user1, String user2, String detail){
+        try{
+            PreparedStatement p = con.prepareStatement(UPDATE_HISTORY) ; 
+            p.setString(1, user1);
+            p.setString(2, user2);
+            p.setString(3, detail);
+            p.executeUpdate() ;
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean updateUser(UserModel user) {
         try {
             PreparedStatement p = con.prepareStatement(UPDATE_USER);
@@ -130,7 +146,62 @@ public class UserController {
         }
         return null;
     }
+    public String getHistory(String username) {
+    StringBuilder resultHistory = new StringBuilder("success");
+    String GET_HISTORY_QUERY = "SELECT userName1, userName2, resultMatch FROM history WHERE userName1 = ? OR userName2 = ?";
+    SimpleDateFormat inputDateFormat = new SimpleDateFormat("yyyy/MM/dd-HH:mm"); // Định dạng gốc trong database
+    SimpleDateFormat outputDateFormat = new SimpleDateFormat("HH:mm dd/MM/yyyy");
 
+    try {
+        PreparedStatement p = con.prepareStatement(GET_HISTORY_QUERY);
+        p.setString(1, username);
+        p.setString(2, username);
+        ResultSet r = p.executeQuery();
+
+        while (r.next()) {
+            String player1 = r.getString("userName1");
+            String player2 = r.getString("userName2");
+            String resultMatch = r.getString("resultMatch");
+
+            // Tách kết quả và thời gian từ resultMatch
+            String[] resultParts = resultMatch.split("\\ ");
+            String dateStr = resultParts[0];
+            String result =  resultParts[1];
+            String formattedDate = dateStr;
+
+            // Định dạng lại ngày nếu có phần ngày
+            if (!dateStr.isEmpty()) {
+                try {
+                    java.util.Date date = inputDateFormat.parse(dateStr);
+                    formattedDate = outputDateFormat.format(date);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            // Xác định đối thủ và kết quả dựa trên người chơi hiện tại
+            String opponent = player1.equals(username) ? player2 : player1;
+            if (!player1.equals(username)) {
+                if(result.equals("thang")) {
+                    result = "thua";
+                } else if ( result.equals("thua")){
+                    result = "thang";
+                }
+                else{
+                    result = "hoa";
+                }
+            } 
+         
+            // Thêm thông tin vào chuỗi kết quả với đối thủ, thời gian, kết quả cách nhau bằng dấu ";"
+            resultHistory.append(";").append(opponent).append(";").append(formattedDate).append(";").append(result);
+        }
+
+        return resultHistory.toString();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return null;
+}
     public String getRank() {
         StringBuilder rankList = new StringBuilder("RANK;");
         String query = "SELECT username, score, win, draw, lose FROM users ORDER BY score DESC";

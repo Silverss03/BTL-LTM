@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.concurrent.Callable;
 import model.UserModel;
 import run.ServerRun;
+import java.time.format.DateTimeFormatter;
 
 public class Room {
     String id;
@@ -83,6 +84,14 @@ public class Room {
     public String handleResultClient() throws SQLException {
         System.out.println(resultClient1);
         System.out.println(resultClient2);
+        String user1 = client1.getLoginUser() ; 
+        System.out.println(user1); 
+        String user2 = client2.getLoginUser();
+        System.out.println(user2);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd-HH:mm");  
+        LocalDateTime now = LocalDateTime.now();  
+        String data = dtf.format(now)  ;  
+
         if (resultClient1 == null & resultClient2 == null) {
             draw();
             return "DRAW";
@@ -91,12 +100,19 @@ public class Room {
             int pointClient2 = Integer.parseInt(resultClient2);
             
             if (pointClient1 > pointClient2) {
+                data += " thang" ;
+                new UserController().updateHistory(user1, user2, data);
+
                 client1Win();
                 return client1.getLoginUser();
             } else if (pointClient1 < pointClient2) {
+                data += " thang" ; 
+                new UserController().updateHistory(user2, user1, data);
                 client2Win();
                 return client2.getLoginUser();
             } else {
+                data += " hoa" ;
+                new UserController().updateHistory(user1, user2, data);
                 draw();
                 return "DRAW";
             }

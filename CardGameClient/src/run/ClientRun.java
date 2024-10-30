@@ -10,6 +10,8 @@ import view.MessageView;
 import view.RankView;
 import view.RankWinView;
 import view.RegisterView;
+import view.HistoryView;
+
 
 public class ClientRun {
 
@@ -22,7 +24,8 @@ public class ClientRun {
         MESSAGEVIEW,
         RANKVIEW,
         RANKWINVIEW,
-        GAMEVIEW
+        GAMEVIEW,
+        HISTORYVIEW
     }
 
     // scenes
@@ -35,6 +38,8 @@ public class ClientRun {
     public static GameView gameView;
     public static InfoPlayerView infoPlayerView;
     public static MessageView messageView;
+    public static HistoryView historyView;
+
     
     // controller 
     public static SocketHandler socketHandler;
@@ -55,6 +60,8 @@ public class ClientRun {
         infoPlayerView = new InfoPlayerView();
         messageView = new MessageView();
         gameView = new GameView();
+        historyView = new HistoryView();
+
     }
 
     public static void openScene(SceneName sceneName) {
@@ -96,6 +103,10 @@ public class ClientRun {
                     gameView = new GameView();
                     gameView.setVisible(true);
                     break;
+                case HISTORYVIEW:
+                    historyView = new HistoryView();
+                    historyView.setVisible(true);
+                    break;
                 default:
                     break;
             }
@@ -132,6 +143,9 @@ public class ClientRun {
                 case GAMEVIEW:
                     gameView.dispose();
                     break;
+                case HISTORYVIEW:
+                    if (historyView != null) historyView.dispose();
+                    break;
                 default:
                     break;
             }
@@ -147,6 +161,7 @@ public class ClientRun {
         infoPlayerView.dispose();
         rankView.dispose();
         rankWinView.dispose();
+        historyView.dispose();
     }
 
     public static void main(String[] args) {

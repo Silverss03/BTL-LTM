@@ -91,6 +91,9 @@ public class Client implements Runnable {
                     case "RANKWIN":
                         onReceiveRankWin();
                         break;
+                    case "HISTORY":
+                        onReceiveHistory(received);
+                        break;
                     case "LOGOUT":
                         onReceiveLogout();
                         break;
@@ -201,6 +204,16 @@ public class Client implements Runnable {
         String msg = "GET_LIST_ONLINE" + ";" + result;
         ServerRun.clientManager.broadcast(msg);
     }
+    
+    private void onReceiveHistory(String received) {
+        String[] splitted = received.split(";");
+        String username = splitted[1];
+
+        String result = new UserController().getHistory(username);
+
+        sendData("HISTORY;" + result);
+    }
+
 
     private void onReceiveGetInfoUser(String received) {
         String[] splitted = received.split(";");
@@ -506,6 +519,7 @@ public class Client implements Runnable {
         sendData(result);
     }
 
+     
     private void onReceiveRankWin() {
         String result = new UserController().getRankWin();
         sendData(result);
