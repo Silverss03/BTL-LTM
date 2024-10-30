@@ -3,17 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/BTL-LTM/CardGameClient/src/view/RankWinView.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/BTL-LTM/CardGameClient/src/view/InfoPlayerView.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/BTL-LTM/CardGameClient/src/run/ClientRun.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/BTL-LTM/CardGameClient/src/view/HomeView.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/BTL-LTM/CardGameClient/src/assets/infoview.jpg</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/BTL-LTM/CardGameClient/src/view/RegisterView.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/BTL-LTM/CardGameClient/src/view/HistoryView.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/BTL-LTM/CardGameClient/src/controller/SocketHandler.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/BTL-LTM/CardGameClient/src/view/MessageView.java</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/BTL-LTM/CardGameClient/src/assets/history.jpg</file>
-            <file>file:/C:/Users/Admin/Documents/NetBeansProjects/BTL-LTM/CardGameClient/src/view/RankView.java</file>
+            <file>file:/D:/Code/Network%20Programming/BTL-LTM/CardGameClient/src/view/HistoryView.java</file>
+            <file>file:/D:/Code/Network%20Programming/BTL-LTM/CardGameClient/src/run/ClientRun.java</file>
+            <file>file:/D:/Code/Network%20Programming/BTL-LTM/CardGameClient/src/view/GameView.java</file>
+            <file>file:/D:/Code/Network%20Programming/BTL-LTM/CardGameClient/src/controller/SocketHandler.java</file>
+            <file>file:/D:/Code/Network%20Programming/BTL-LTM/CardGameClient/src/view/RankView.java</file>
         </group>
     </open-files>
 </project-private>

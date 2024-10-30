@@ -187,7 +187,7 @@ public class UserController {
                 } else if ( result.equals("thua")){
                     result = "thang";
                 }
-                else{
+                else if(result.equals("hoa")){
                     result = "hoa";
                 }
             } 
