@@ -5,8 +5,12 @@
         <group>
             <file>file:/D:/Code/Network%20Programming/BTL-LTM/CardGameClient/src/view/HistoryView.java</file>
             <file>file:/D:/Code/Network%20Programming/BTL-LTM/CardGameClient/src/run/ClientRun.java</file>
+            <file>file:/D:/Code/Network%20Programming/BTL-LTM/CardGameClient/src/view/MessageView.java</file>
+            <file>file:/D:/Code/Network%20Programming/BTL-LTM/CardGameClient/src/view/HomeView.java</file>
+            <file>file:/D:/Code/Network%20Programming/BTL-LTM/CardGameClient/src/view/RankWinView.java</file>
             <file>file:/D:/Code/Network%20Programming/BTL-LTM/CardGameClient/src/view/GameView.java</file>
             <file>file:/D:/Code/Network%20Programming/BTL-LTM/CardGameClient/src/controller/SocketHandler.java</file>
+            <file>file:/D:/Code/Network%20Programming/BTL-LTM/CardGameClient/src/view/RegisterView.java</file>
             <file>file:/D:/Code/Network%20Programming/BTL-LTM/CardGameClient/src/view/RankView.java</file>
         </group>
     </open-files>

@@ -16,6 +16,7 @@ import javax.swing.table.DefaultTableModel;
 
 public class GameView extends javax.swing.JFrame {
     String competitor = "";
+    CountDownTimer flipTimer;
     CountDownTimer waitingClientTimer;
     boolean answer = false;
     Random random = new Random();
@@ -50,6 +51,7 @@ public class GameView extends javax.swing.JFrame {
     JLabel player2NameLabel = new JLabel("");
     JLabel player2ScoreLabel = new JLabel("Điểm: " + player2Score);
     JLabel playerTurn = new JLabel("Đợi người chơi khác rút bài") ;
+    private Timer swingTimer; 
     JPanel gamePanel = new JPanel() {
         @Override
         public void paintComponent(Graphics g) {
@@ -300,7 +302,6 @@ public class GameView extends javax.swing.JFrame {
         lbResult.setVisible(false);
         panelPlayAgain.setVisible(false) ;
         yourTurn = true ; 
-        playerTurn.setText("Lượt của bạn, hãy rút bài!");
     }
     
     public void setStateUserInvited () {
@@ -313,6 +314,11 @@ public class GameView extends javax.swing.JFrame {
     }
      
     public void setStartGame () {
+        if (swingTimer != null && swingTimer.isRunning()) {
+            swingTimer.stop();
+        }
+        hiddenCard = new ArrayList<>() ; 
+        cardFlipped = new ArrayList<>() ; 
         scheduler = Executors.newScheduledThreadPool(1);
         answer = false;
         maxCards = 3 ; 
@@ -322,13 +328,19 @@ public class GameView extends javax.swing.JFrame {
         startPanel.setVisible(false);
         lbResult.setVisible(false);
         panelPlayAgain.setVisible(false);
+        if(yourTurn){
+            waitingFlipCard() ;
+        }
         gamePanel.setVisible(true);
+        scoreLabel.setText("Điểm :" + player1Score);
         player1Panel.setVisible(true);
+        player2ScoreLabel.setText("Điểm :" + player2Score);
         player2Panel.setVisible(true);
+
     }
     
     public void waitingReplyClient () {
-        waitingClientTimer = new CountDownTimer(10);
+        waitingClientTimer = new CountDownTimer(5);
         waitingClientTimer.setTimerCallBack(
                 null,
                 (Callable) () -> {
@@ -341,6 +353,33 @@ public class GameView extends javax.swing.JFrame {
                 1
         );
     }
+    
+public void waitingFlipCard() {
+    final int[] countdown = {10}; // Start countdown from 10 seconds
+    
+    if (swingTimer != null && swingTimer.isRunning()) {
+        swingTimer.stop();
+    }
+
+    if(maxCards != 0){
+        swingTimer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (countdown[0] > 0) {
+                    playerTurn.setText("Luợt bạn, hãy rút bài, còn " + countdown[0] + " giây!");
+                    countdown[0]--;
+                } else {
+                    ((Timer) e.getSource()).stop(); // Stop the timer
+                    playerTurn.setText("Đợi người chơi khác rút bài");
+                    maxCards = maxCards - 1;
+                    ClientRun.socketHandler.cardFlipped(competitor, -1, 0); // Execute action when time is up
+                }
+            }
+        });
+        swingTimer.setInitialDelay(0); // Start immediately
+        swingTimer.start();
+    }
+}
     
     public void showMessage(String msg){
         JOptionPane.showMessageDialog(this, msg);
@@ -367,6 +406,10 @@ public class GameView extends javax.swing.JFrame {
 
             hitButton.setEnabled(false);
             stayButton.setEnabled(false);
+            if (swingTimer != null && swingTimer.isRunning()) {
+                swingTimer.stop();
+            }
+            
             ClientRun.socketHandler.cardFlipped(competitor, selectedCardIndex, score) ; 
             selectedCardIndex = -1;  // Reset selection
             maxCards = maxCards - 1; 
@@ -394,15 +437,22 @@ public class GameView extends javax.swing.JFrame {
     }
     
     public void flipCard(int cardIndex, int point){
-        cardFlipped.set(cardIndex, true);  // Mark the card as flipped
+        if(cardIndex != -1){
+            cardFlipped.set(cardIndex, true);  // Mark the card as flipped
+            player2Score += point ; 
+            player2ScoreLabel.setText("Điểm " + player2Score);
+            yourTurn = true ; 
+            playerTurn.setText("Lượt của bạn, hãy rút bài!");
+            gamePanel.repaint() ;
+        }
         opponentCards -= 1 ;
-        player2Score += point ; 
-        player2ScoreLabel.setText("Điểm " + player2Score);
         yourTurn = true ; 
-        playerTurn.setText("Lượt của bạn, hãy rút bài!");
-        gamePanel.repaint() ;
+        waitingFlipCard() ;
         if(maxCards == 0){
             scheduler.schedule(() -> {
+                if (swingTimer != null && swingTimer.isRunning()) {
+                    swingTimer.stop();
+                }
                 ClientRun.socketHandler.submitResult(competitor, player1Score);
                 // After the task, shut down the scheduler
                 scheduler.shutdown();

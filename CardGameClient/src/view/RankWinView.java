@@ -68,21 +68,21 @@ private void setupFrame() {
         dispose();
     });
 
-//    JButton historyButton = new JButton("Lịch Sử Chơi");
-//    historyButton.setFont(new Font("Arial", Font.BOLD, 14));
-//    historyButton.setBackground(Color.decode("#3d6a9f"));
-//    historyButton.setForeground(Color.WHITE);
-//    historyButton.setFocusPainted(false);
-//    historyButton.setBorderPainted(false);
-//    historyButton.addActionListener(e -> {
-//        String username = "user3";
-//        ClientRun.socketHandler.getHistory(username);
-//    });
+    JButton historyButton = new JButton("Lịch Sử Chơi");
+    historyButton.setFont(new Font("Arial", Font.BOLD, 14));
+    historyButton.setBackground(Color.decode("#3d6a9f"));
+    historyButton.setForeground(Color.WHITE);
+    historyButton.setFocusPainted(false);
+    historyButton.setBorderPainted(false);
+    historyButton.addActionListener(e -> {
+        String username = ClientRun.socketHandler.loginUser;
+        ClientRun.socketHandler.getHistory(username);
+    });
 
     // Thêm các nút vào buttonPanel
     buttonPanel.add(homeButton);
     buttonPanel.add(winRankingButton);
-//    buttonPanel.add(historyButton);
+    buttonPanel.add(historyButton);
 
     // Thêm buttonPanel vào backgroundPanel ở phía nam
     backgroundPanel.add(buttonPanel, BorderLayout.SOUTH);

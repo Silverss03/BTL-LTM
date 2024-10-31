@@ -21,7 +21,7 @@ public class SocketHandler {
     DataInputStream dis;
     DataOutputStream dos;
 
-    String loginUser = null; // lưu tài khoản đăng nhập hiện tại
+    public String loginUser = null; // lưu tài khoản đăng nhập hiện tại
     String roomIdPresent = null; // lưu room hiện tại
     float score = 0;
 
