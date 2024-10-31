@@ -271,6 +271,9 @@
             <Component class="javax.swing.JButton" name="btnViewHistory">
               <Properties>
                 <Property name="text" type="java.lang.String" value="L&#x1ecb;ch s&#x1eed;"/>
+                <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+                  <Color id="Hand Cursor"/>
+                </Property>
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnViewHistoryActionPerformed"/>
@@ -287,6 +290,9 @@
               <Image iconType="3" name="/assets/chat.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Nh&#x1eaf;n tin"/>
+            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+              <Color id="Hand Cursor"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnMessageActionPerformed"/>
@@ -303,6 +309,9 @@
               <Image iconType="3" name="/assets/info.png"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="Th&#xf4;ng tin ng&#x1b0;&#x1edd;i ch&#x1a1;i"/>
+            <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
+              <Color id="Hand Cursor"/>
+            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGetInfoActionPerformed"/>

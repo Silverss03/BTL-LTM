@@ -36,7 +36,7 @@ public class UserController {
             ResultSet r = p.executeQuery();
 
             if (r.next()) {
-                return "failed;User Already Exists";
+                return "failed;Người dùng đã tồn tại!";
             } else {
                 r.close();
                 p.close();

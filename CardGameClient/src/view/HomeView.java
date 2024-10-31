@@ -158,6 +158,7 @@ public class HomeView extends javax.swing.JFrame {
         lbScore.setText("Tổng điểm:");
 
         btnViewHistory.setText("Lịch sử");
+        btnViewHistory.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnViewHistory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnViewHistoryActionPerformed(evt);
@@ -204,6 +205,7 @@ public class HomeView extends javax.swing.JFrame {
         btnMessage.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
         btnMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/chat.png"))); // NOI18N
         btnMessage.setToolTipText("Nhắn tin");
+        btnMessage.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnMessage.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnMessageActionPerformed(evt);
@@ -214,6 +216,7 @@ public class HomeView extends javax.swing.JFrame {
 
         btnGetInfo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/info.png"))); // NOI18N
         btnGetInfo.setToolTipText("Thông tin người chơi");
+        btnGetInfo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnGetInfo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnGetInfoActionPerformed(evt);

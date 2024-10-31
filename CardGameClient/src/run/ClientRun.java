@@ -68,16 +68,31 @@ public class ClientRun {
         if (null != sceneName) {
             switch (sceneName) {
                 case CONNECTSERVER:
-                    connectServer = new ConnectServer();
-                    connectServer.setVisible(true);
+                    try {
+                        UIManager.setLookAndFeel(new FlatLightLaf());
+                        connectServer = new ConnectServer();
+                        connectServer.setVisible(true);
+                    } catch (Exception ex) {
+                        System.err.println("Failed to initialize LaF");
+                    }
                     break;
                 case LOGIN:
-                    loginView = new LoginView();
-                    loginView.setVisible(true);
+                    try {
+                        UIManager.setLookAndFeel(new FlatLightLaf());
+                        loginView = new LoginView();
+                        loginView.setVisible(true);
+                    } catch (Exception ex) {
+                        System.err.println("Failed to initialize LaF");
+                    }
                     break;
                 case REGISTER:
-                    registerView = new RegisterView();
-                    registerView.setVisible(true);
+                    try {
+                        UIManager.setLookAndFeel(new FlatLightLaf());
+                        registerView = new RegisterView();
+                        registerView.setVisible(true);
+                    } catch (Exception ex) {
+                        System.err.println("Failed to initialize LaF");
+                    }
                     break;
                 case HOMEVIEW:
                     try {
@@ -89,28 +104,58 @@ public class ClientRun {
                     }
                     break;
                 case INFOPLAYER:
-                    infoPlayerView = new InfoPlayerView();
-                    infoPlayerView.setVisible(true);
+                    try {
+                        UIManager.setLookAndFeel(new FlatLightLaf());
+                        infoPlayerView = new InfoPlayerView();
+                        infoPlayerView.setVisible(true);
+                    } catch (Exception ex) {
+                        System.err.println("Failed to initialize LaF");
+                    }
                     break;
                 case MESSAGEVIEW:
-                    messageView = new MessageView();
-                    messageView.setVisible(true);
+                    try {
+                        UIManager.setLookAndFeel(new FlatLightLaf());
+                        messageView = new MessageView();
+                        messageView.setVisible(true);
+                    } catch (Exception ex) {
+                        System.err.println("Failed to initialize LaF");
+                    }
                     break;
                 case RANKVIEW:
-                    rankView = new RankView();
-                    rankView.setVisible(true);
+                    try {
+                        UIManager.setLookAndFeel(new FlatLightLaf());
+                        rankView = new RankView();
+                        rankView.setVisible(true);
+                    } catch (Exception ex) {
+                        System.err.println("Failed to initialize LaF");
+                    }
                     break;
                 case RANKWINVIEW:
-                    rankWinView = new RankWinView();
-                    rankWinView.setVisible(true);
+                    try {
+                        UIManager.setLookAndFeel(new FlatLightLaf());
+                        rankWinView = new RankWinView();
+                        rankWinView.setVisible(true);
+                    } catch (Exception ex) {
+                        System.err.println("Failed to initialize LaF");
+                    }
                     break;
                 case GAMEVIEW:
-                    gameView = new GameView();
-                    gameView.setVisible(true);
+                    try {
+                        UIManager.setLookAndFeel(new FlatLightLaf());
+                        gameView = new GameView();
+                        gameView.setVisible(true);
+                    } catch (Exception ex) {
+                        System.err.println("Failed to initialize LaF");
+                    }
                     break;
                 case HISTORYVIEW:
-                    historyView = new HistoryView();
-                    historyView.setVisible(true);
+                    try {
+                        UIManager.setLookAndFeel(new FlatLightLaf());
+                        historyView = new HistoryView();
+                        historyView.setVisible(true);
+                    } catch (Exception ex) {
+                        System.err.println("Failed to initialize LaF");
+                    }
                     break;
                 default:
                     break;
