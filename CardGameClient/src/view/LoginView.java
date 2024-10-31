@@ -126,7 +126,7 @@ public class LoginView extends javax.swing.JFrame {
             tfPassword.grabFocus();
         } else {
             ClientRun.socketHandler.login(userName, password);
-
+            
             javax.swing.JOptionPane.showMessageDialog(this, "Đăng nhập thành công!", "Thông báo", javax.swing.JOptionPane.INFORMATION_MESSAGE);
 
         }

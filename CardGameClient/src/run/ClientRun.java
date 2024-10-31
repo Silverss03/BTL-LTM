@@ -1,6 +1,8 @@
 package run;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import controller.SocketHandler;
+import javax.swing.UIManager;
 import view.ConnectServer;
 import view.GameView;
 import view.HomeView;
@@ -11,7 +13,6 @@ import view.RankView;
 import view.RankWinView;
 import view.RegisterView;
 import view.HistoryView;
-
 
 public class ClientRun {
 
@@ -40,7 +41,6 @@ public class ClientRun {
     public static MessageView messageView;
     public static HistoryView historyView;
 
-    
     // controller 
     public static SocketHandler socketHandler;
 
@@ -80,8 +80,13 @@ public class ClientRun {
                     registerView.setVisible(true);
                     break;
                 case HOMEVIEW:
-                    homeView = new HomeView();
-                    homeView.setVisible(true);
+                    try {
+                        UIManager.setLookAndFeel(new FlatLightLaf());
+                        homeView = new HomeView();
+                        homeView.setVisible(true);
+                    } catch (Exception ex) {
+                        System.err.println("Failed to initialize LaF");
+                    }
                     break;
                 case INFOPLAYER:
                     infoPlayerView = new InfoPlayerView();
@@ -135,16 +140,22 @@ public class ClientRun {
                     messageView.dispose();
                     break;
                 case RANKVIEW:
-                    if (rankView != null) rankView.dispose();
+                    if (rankView != null) {
+                        rankView.dispose();
+                    }
                     break;
                 case RANKWINVIEW:
-                    if (rankWinView != null) rankWinView.dispose();
+                    if (rankWinView != null) {
+                        rankWinView.dispose();
+                    }
                     break;
                 case GAMEVIEW:
                     gameView.dispose();
                     break;
                 case HISTORYVIEW:
-                    if (historyView != null) historyView.dispose();
+                    if (historyView != null) {
+                        historyView.dispose();
+                    }
                     break;
                 default:
                     break;

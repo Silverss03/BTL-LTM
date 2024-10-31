@@ -6,7 +6,6 @@ import javax.swing.table.DefaultTableModel;
 import run.ClientRun;
 
 public class HomeView extends javax.swing.JFrame {
-
     String statusCompetitor = "";
 
     public void getUserOnline() {
@@ -41,6 +40,11 @@ public class HomeView extends javax.swing.JFrame {
         dtm.setRowCount(0);
     }
 
+    private void refreshUserScore() {
+        String username = ClientRun.socketHandler.getLoginUser(); // Lấy tên người dùng hiện tại
+        ClientRun.socketHandler.getUserScore(username); // Gọi hàm lấy điểm người dùng
+    }
+
     public void setUsername(String username) {
         lbUsername.setText(username);
     }
@@ -66,6 +70,7 @@ public class HomeView extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         lbUsername = new javax.swing.JLabel();
         lbScore = new javax.swing.JLabel();
+        btnViewHistory = new javax.swing.JButton();
         btnMessage = new javax.swing.JButton();
         btnGetInfo = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
@@ -137,7 +142,7 @@ public class HomeView extends javax.swing.JFrame {
         jScrollPane.setViewportView(tblUser);
 
         jPanel1.add(jScrollPane);
-        jScrollPane.setBounds(600, 120, 210, 440);
+        jScrollPane.setBounds(600, 120, 200, 440);
 
         btnRefresh.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
         btnRefresh.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/refresh.png"))); // NOI18N
@@ -157,6 +162,13 @@ public class HomeView extends javax.swing.JFrame {
 
         lbScore.setText("Tổng điểm:");
 
+        btnViewHistory.setText("Lịch sử");
+        btnViewHistory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnViewHistoryActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -166,9 +178,13 @@ public class HomeView extends javax.swing.JFrame {
                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbUsername)
-                    .addComponent(lbScore))
-                .addContainerGap(54, Short.MAX_VALUE))
+                    .addComponent(btnViewHistory, javax.swing.GroupLayout.DEFAULT_SIZE, 88, Short.MAX_VALUE)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbUsername)
+                            .addComponent(lbScore))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -181,12 +197,14 @@ public class HomeView extends javax.swing.JFrame {
                         .addGap(20, 20, 20)
                         .addComponent(lbUsername)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lbScore)))
+                        .addComponent(lbScore)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnViewHistory)))
                 .addContainerGap())
         );
 
         jPanel1.add(jPanel3);
-        jPanel3.setBounds(600, 0, 220, 100);
+        jPanel3.setBounds(600, 0, 200, 100);
 
         btnMessage.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
         btnMessage.setIcon(new javax.swing.ImageIcon(getClass().getResource("/assets/chat.png"))); // NOI18N
@@ -237,9 +255,7 @@ public class HomeView extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 20, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 800, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -327,6 +343,12 @@ public class HomeView extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnGetInfoActionPerformed
 
+    private void btnViewHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnViewHistoryActionPerformed
+        // TODO add your handling code here:
+        String username = ClientRun.socketHandler.getLoginUser();
+        ClientRun.socketHandler.getHistory(username);
+    }//GEN-LAST:event_btnViewHistoryActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -338,6 +360,7 @@ public class HomeView extends javax.swing.JFrame {
     private javax.swing.JButton btnMessage;
     private javax.swing.JButton btnRank;
     private javax.swing.JButton btnRefresh;
+    private javax.swing.JButton btnViewHistory;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

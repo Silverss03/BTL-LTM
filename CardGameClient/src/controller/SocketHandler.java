@@ -120,7 +120,7 @@ public class SocketHandler {
                         break;
                     case "START_GAME":
                         onReceiveStartGame(received);
-                        break; 
+                        break;
                     case "RESULT_GAME":
                         onReceiveResultGame(received);
                         break;
@@ -136,9 +136,12 @@ public class SocketHandler {
                     case "HISTORY":
                         onReceiveHistory(received);
                         break;
-                    case "CARD_FLIPPED" :
-                        onReceivedCardFlipped(received) ; 
-                        break ; 
+                    case "CARD_FLIPPED":
+                        onReceivedCardFlipped(received);
+                        break;
+                    case "USER_SCORE":
+                        onReceiveUserScore(received); // Gọi hàm xử lý điểm
+                        break;
                     case "EXIT":
                         running = false;
                 }
@@ -189,6 +192,7 @@ public class SocketHandler {
     public void getRankWin() {
         sendData("RANKWIN");
     }
+
     public void getHistory(String username) {
         sendData("HISTORY;" + username);
     }
@@ -232,37 +236,51 @@ public class SocketHandler {
     public void inviteToPlay(String userInvited) {
         sendData("INVITE_TO_PLAY;" + loginUser + ";" + userInvited);
     }
-    
+
     //play game
-    public void leaveGame (String userInvited) { 
+    public void leaveGame(String userInvited) {
         sendData("LEAVE_TO_GAME;" + loginUser + ";" + userInvited + ";" + roomIdPresent);
     }
-    
-    public void startGame (String userInvited) { 
+
+    public void startGame(String userInvited) {
         sendData("START_GAME;" + loginUser + ";" + userInvited + ";" + roomIdPresent);
     }
-    
-    public void submitResult (String competitor, int score) { 
+
+    public void submitResult(String competitor, int score) {
         sendData("SUBMIT_RESULT;" + loginUser + ";" + competitor + ";" + roomIdPresent + ";" + score);
         ClientRun.gameView.afterSubmit();
     }
-    
+
     public void acceptPlayAgain() {
         sendData("ASK_PLAY_AGAIN;YES;" + loginUser);
     }
-    
+
     public void notAcceptPlayAgain() {
         sendData("ASK_PLAY_AGAIN;NO;" + loginUser);
     }
-    
-    public void cardFlipped(String username, int selectedCardIndex, int score){
-        sendData("CARD_FLIPPED" + ";" + username + ";" + selectedCardIndex + ";" + score) ;
+
+    public void cardFlipped(String username, int selectedCardIndex, int score) {
+        sendData("CARD_FLIPPED" + ";" + username + ";" + selectedCardIndex + ";" + score);
     }
-    
-    public void onReceivedCardFlipped(String received){
-        String[] splitted = received.split(";") ;
-        int cardIndex = Integer.parseInt(splitted[1]) ;
-        int point = Integer.parseInt(splitted[2]) ; 
+
+    public void getUserScore(String username) {
+        sendData("GET_USER_SCORE;" + username); // Gửi yêu cầu đến server
+    }
+
+    private void onReceiveUserScore(String received) {
+        String[] parts = received.split(";");
+        String user = parts[1];
+        float score = Float.parseFloat(parts[2]);
+
+        // Gửi dữ liệu điểm trở lại client
+        sendData("USER_SCORE;" + user + ";" + score);
+    }
+
+
+    public void onReceivedCardFlipped(String received) {
+        String[] splitted = received.split(";");
+        int cardIndex = Integer.parseInt(splitted[1]);
+        int point = Integer.parseInt(splitted[2]);
         ClientRun.gameView.flipCard(cardIndex, point);
     }
 
@@ -414,7 +432,7 @@ public class SocketHandler {
 
             Vector vdata = new Vector();
             if (userCount > 1) {
-                for (int i = 3; i < userCount + 4; i+=2) {
+                for (int i = 3; i < userCount + 4; i += 2) {
                     String user = splitted[i];
                     float score = Float.parseFloat(splitted[i + 1]);
                     if (!user.equals(loginUser) && !user.equals("null")) {
@@ -434,37 +452,35 @@ public class SocketHandler {
             JOptionPane.showMessageDialog(ClientRun.loginView, "Đã có lỗi!", "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
-   private void onReceiveHistory(String received) {
-       System.out.println(received);
-    StringBuilder historyDisplay = new StringBuilder();
 
-    String[] data = received.split(";");
+    private void onReceiveHistory(String received) {
+        System.out.println(received);
+        StringBuilder historyDisplay = new StringBuilder();
 
-    if (data.length > 0 && data[1].equals("success")) {
-        for (int i = 2; i < data.length; i += 3) { 
-            if (i + 2 < data.length) {
-                String opponent = data[i];       // Opponent's name
-                String date = data[i + 1];       // Match date
-                String result = data[i + 2];     // Result ("thắng" or "thua")
+        String[] data = received.split(";");
 
-                // Append formatted history
-                historyDisplay.append("Match with ").append(opponent)
-                              .append(" on ").append(date).append(": ")
-                              .append(result.equals("thang") ? "Thắng" : "Thua")
-                              .append("\n");
+        if (data.length > 0 && data[1].equals("success")) {
+            for (int i = 2; i < data.length; i += 3) {
+                if (i + 2 < data.length) {
+                    String opponent = data[i];       // Opponent's name
+                    String date = data[i + 1];       // Match date
+                    String result = data[i + 2];     // Result ("thắng" or "thua")
+
+                    // Append formatted history
+                    historyDisplay.append("Match with ").append(opponent)
+                            .append(" on ").append(date).append(": ")
+                            .append(result.equals("thang") ? "Thắng" : "Thua")
+                            .append("\n");
+                }
             }
+        } else {
+            historyDisplay.append("No game history found for this user.");
         }
-    } else {
-        historyDisplay.append("No game history found for this user.");
+
+        ClientRun.historyView = new HistoryView();
+        ClientRun.historyView.updateHistoryDisplay(historyDisplay.toString());
+        ClientRun.historyView.setVisible(true);
     }
-    
-    ClientRun.historyView = new HistoryView();
-    ClientRun.historyView.updateHistoryDisplay(historyDisplay.toString());
-    ClientRun.historyView.setVisible(true);
-}
-
-
-
 
     private void onReceiveRank(String received) {
         StringBuilder rankDisplay = new StringBuilder();
@@ -558,8 +574,8 @@ public class SocketHandler {
         String status = splitted[2];
         ClientRun.homeView.setStatusCompetitor(status);
     }
-    
-       private void onReceiveAcceptPlay(String received) {
+
+    private void onReceiveAcceptPlay(String received) {
         // get status from data
         String[] splitted = received.split(";");
         String status = splitted[1];
@@ -573,7 +589,7 @@ public class SocketHandler {
             ClientRun.gameView.setStateHostRoom();
         }
     }
-    
+
     private void onReceiveNotAcceptPlay(String received) {
         // get status from data
         String[] splitted = received.split(";");
@@ -582,11 +598,11 @@ public class SocketHandler {
         if (status.equals("success")) {
             String userHost = splitted[2];
             String userInvited = splitted[3];
-                
+
             JOptionPane.showMessageDialog(ClientRun.homeView, userInvited + " không muốn chơi với bạn!");
         }
     }
-    
+
     private void onReceiveLeaveGame(String received) {
         // get status from data
         String[] splitted = received.split(";");
@@ -597,23 +613,23 @@ public class SocketHandler {
             String user2 = splitted[3];
 
             roomIdPresent = null;
-            ClientRun.closeScene(ClientRun.SceneName.GAMEVIEW);   
+            ClientRun.closeScene(ClientRun.SceneName.GAMEVIEW);
             JOptionPane.showMessageDialog(ClientRun.homeView, user1 + " đã thoát game!");
         }
     }
-    
+
     private void onReceiveStartGame(String received) {
         // get status from data
         String[] splitted = received.split(";");
         String status = splitted[1];
-        String deck = splitted[3] ; 
+        String deck = splitted[3];
 
         if (status.equals("success")) {
             ClientRun.gameView.setStartGame();
             ClientRun.gameView.setDeck(deck);
         }
     }
-    
+
     private void onReceiveResultGame(String received) {
         // get status from data
         String[] splitted = received.split(";");
@@ -622,7 +638,7 @@ public class SocketHandler {
         String user1 = splitted[3];
         String user2 = splitted[4];
         String roomId = splitted[5];
-        
+
         if (status.equals("success")) {
             ClientRun.gameView.setWaitingRoom();
             if (result.equals("DRAW")) {
@@ -634,12 +650,12 @@ public class SocketHandler {
             }
         }
     }
-    
+
     private void onReceiveAskPlayAgain(String received) {
         // get status from data
         String[] splitted = received.split(";");
         String status = splitted[1];
-        
+
         if (status.equals("NO")) {
             ClientRun.closeScene(ClientRun.SceneName.GAMEVIEW);
         } else {
@@ -649,7 +665,7 @@ public class SocketHandler {
                 ClientRun.gameView.setStateUserInvited();
             }
         }
-    }  
+    }
 
     // get set
     public String getLoginUser() {

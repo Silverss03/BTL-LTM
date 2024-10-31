@@ -5,10 +5,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-	
-    private String jdbcURL = "jdbc:mysql://localhost:3308/btlltm?useSSL=false&allowPublicKeyRetrieval=true";
+
+    private String jdbcURL = "jdbc:mysql://localhost:3306/btlltm?useSSL=false&allowPublicKeyRetrieval=true";
     private String jdbcUsername = "root";
-    private String jdbcPassword = "0915166497Bc#";
+    private String jdbcPassword = "";
 
     private static DatabaseConnection instance;
     private Connection connection;
@@ -23,7 +23,7 @@ public class DatabaseConnection {
     private DatabaseConnection() {
 
     }
-    
+
     public Connection getConnection() {
             try {
                 Class.forName("com.mysql.cj.jdbc.Driver");
@@ -36,8 +36,8 @@ public class DatabaseConnection {
                 e.printStackTrace();
             }
             return connection;
-	}
-    
+    }
+
     public void setConnection(Connection connection) {
         this.connection = connection;
     }
