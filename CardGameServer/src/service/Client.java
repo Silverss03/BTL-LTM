@@ -18,9 +18,6 @@ import java.util.logging.Logger;
 import model.Card;
 import java.util.Random;
 import run.ServerRun;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -38,29 +35,11 @@ public class Client implements Runnable {
     int player_finished = 0;
 
     Room joinedRoom;
-    private ScheduledExecutorService scheduler;
 
     public Client(Socket s) throws IOException {
         this.s = s;
 
         // obtaining input and output streams 
-        this.dis = new DataInputStream(s.getInputStream());
-        this.dos = new DataOutputStream(s.getOutputStream());
-        this.scheduler = Executors.newScheduledThreadPool(1);
-        startAutoRefresh();
-    }
-
-    private void startAutoRefresh() {
-        scheduler.scheduleAtFixedRate(() -> {
-            try {
-                refreshStreams();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }, 0, 1, TimeUnit.SECONDS);
-    }
-
-    private void refreshStreams() throws IOException {
         this.dis = new DataInputStream(s.getInputStream());
         this.dos = new DataOutputStream(s.getOutputStream());
     }
@@ -151,7 +130,6 @@ public class Client implements Runnable {
                     case "EXIT":
                         running = false;
                 }
-                scheduler.shutdown();
             } catch (IOException ex) {
                 System.out.println(ex);
                 break;
