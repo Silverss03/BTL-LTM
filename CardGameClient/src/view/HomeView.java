@@ -40,11 +40,6 @@ public class HomeView extends javax.swing.JFrame {
         dtm.setRowCount(0);
     }
 
-    private void refreshUserScore() {
-        String username = ClientRun.socketHandler.getLoginUser(); // Lấy tên người dùng hiện tại
-        ClientRun.socketHandler.getUserScore(username); // Gọi hàm lấy điểm người dùng
-    }
-
     public void setUsername(String username) {
         lbUsername.setText(username);
     }

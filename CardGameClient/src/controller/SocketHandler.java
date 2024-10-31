@@ -139,9 +139,6 @@ public class SocketHandler {
                     case "CARD_FLIPPED":
                         onReceivedCardFlipped(received);
                         break;
-                    case "USER_SCORE":
-                        onReceiveUserScore(received); // Gọi hàm xử lý điểm
-                        break;
                     case "EXIT":
                         running = false;
                 }
@@ -262,20 +259,6 @@ public class SocketHandler {
     public void cardFlipped(String username, int selectedCardIndex, int score) {
         sendData("CARD_FLIPPED" + ";" + username + ";" + selectedCardIndex + ";" + score);
     }
-
-    public void getUserScore(String username) {
-        sendData("GET_USER_SCORE;" + username); // Gửi yêu cầu đến server
-    }
-
-    private void onReceiveUserScore(String received) {
-        String[] parts = received.split(";");
-        String user = parts[1];
-        float score = Float.parseFloat(parts[2]);
-
-        // Gửi dữ liệu điểm trở lại client
-        sendData("USER_SCORE;" + user + ";" + score);
-    }
-
 
     public void onReceivedCardFlipped(String received) {
         String[] splitted = received.split(";");
