@@ -127,7 +127,7 @@ public class HistoryView extends JFrame {
                 String result = parts[1].trim();
                 
                 // Đảm bảo chỉ thêm kết quả là "thắng" hoặc "thua" vào cột resultMatch
-                if (result.equals("Thắng") || result.equals("Thua")) {
+                if (result.equals("Thắng") || result.equals("Thua") || result.equals("Hòa")) {
                     tableModel.addRow(new Object[]{opponent, date, result});
                 }
             }
@@ -149,9 +149,21 @@ public class HistoryView extends JFrame {
                     String opponent = data[i];
                     String date = data[i + 1];
                     String result = data[i + 2];
+
+                    if(result.equals("thang")){
+                        result = "Thắng" ;
+                    }
+                    else if(result.equals("thua")){
+                        result = "Thua" ;
+                    }
+                    else{
+                        result = "Hòa" ;
+                    }
+                    // Append formatted history
                     historyDisplay.append("Match with ").append(opponent)
                                   .append(" on ").append(date).append(": ")
-                                  .append(result.equals("thắng") ? "Thắng" : "Thua").append("\n");
+                                  .append(result)  
+                                  .append("\n");
                 }
             }
         } else {

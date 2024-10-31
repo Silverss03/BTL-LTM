@@ -21,7 +21,7 @@ public class SocketHandler {
     DataInputStream dis;
     DataOutputStream dos;
 
-    String loginUser = null; // lưu tài khoản đăng nhập hiện tại
+    public String loginUser = null; // lưu tài khoản đăng nhập hiện tại
     String roomIdPresent = null; // lưu room hiện tại
     float score = 0;
 
@@ -447,17 +447,25 @@ public class SocketHandler {
                 String date = data[i + 1];       // Match date
                 String result = data[i + 2];     // Result ("thắng" or "thua")
 
+                if(result.equals("thang")){
+                    result = "Thắng" ;
+                }
+                else if(result.equals("thua")){
+                    result = "Thua" ;
+                }
+                else{
+                    result = "Hòa" ;
+                }
                 // Append formatted history
                 historyDisplay.append("Match with ").append(opponent)
                               .append(" on ").append(date).append(": ")
-                              .append(result.equals("thang") ? "Thắng" : "Thua")
+                              .append(result)  
                               .append("\n");
             }
         }
     } else {
         historyDisplay.append("No game history found for this user.");
     }
-    
     ClientRun.historyView = new HistoryView();
     ClientRun.historyView.updateHistoryDisplay(historyDisplay.toString());
     ClientRun.historyView.setVisible(true);

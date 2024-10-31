@@ -73,7 +73,7 @@ public class RankView extends JFrame {
         historyButton.setFocusPainted(false);
         historyButton.setBorderPainted(false);
         historyButton.addActionListener(e -> {
-            String username = "Silver";
+            String username = ClientRun.socketHandler.loginUser;
             ClientRun.socketHandler.getHistory(username);
         });
 

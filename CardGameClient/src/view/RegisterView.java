@@ -46,9 +46,9 @@ public class RegisterView extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setText("Confirm password");
+        jLabel3.setText("Xác nhận mật khẩu");
 
-        btnChangeLogin.setText("Login");
+        btnChangeLogin.setText("Đăng nhập");
         btnChangeLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnChangeLoginActionPerformed(evt);
@@ -56,7 +56,7 @@ public class RegisterView extends javax.swing.JFrame {
         });
 
         btnRegister.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        btnRegister.setText("Register");
+        btnRegister.setText("Đăng ký");
         btnRegister.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnRegisterActionPerformed(evt);
@@ -64,11 +64,11 @@ public class RegisterView extends javax.swing.JFrame {
         });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 48)); // NOI18N
-        jLabel1.setText("Register");
+        jLabel1.setText("Đăng ký");
 
         jLabel2.setText("Username");
 
-        jLabel4.setText("Password");
+        jLabel4.setText("Mật khẩu");
 
         tfConfirmPassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -92,7 +92,7 @@ public class RegisterView extends javax.swing.JFrame {
                                 .addGap(30, 30, 30))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(tfPassword, javax.swing.GroupLayout.DEFAULT_SIZE, 336, Short.MAX_VALUE)
                             .addComponent(tfUsername)
